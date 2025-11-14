@@ -1,7 +1,7 @@
 "use client"
 
 import { Link, useNavigate } from "react-router-dom"
-import { LogOut, User, CalendarDays, LayoutDashboard } from "lucide-react"
+import { LogOut, User, CalendarDays, LayoutDashboard, Download } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export default function Header() {
@@ -14,6 +14,20 @@ export default function Header() {
   // 🔥 NEW: scroll hide header
   const [hideHeader, setHideHeader] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
+const floatAnimation = `
+@keyframes floatBtn {
+  0% { transform: translateY(0px); box-shadow: 0 4px 12px rgba(255,111,0,0.35); }
+  50% { transform: translateY(-6px); box-shadow: 0 8px 18px rgba(255,111,0,0.55); }
+  100% { transform: translateY(0px); box-shadow: 0 4px 12px rgba(255,111,0,0.35); }
+}
+`;
+
+if (!document.getElementById("floatBtnAnim")) {
+  const style = document.createElement("style");
+  style.id = "floatBtnAnim";
+  style.innerHTML = floatAnimation;
+  document.head.appendChild(style);
+}
 
   useEffect(() => {
     const updateScreen = () => setIsMobile(window.innerWidth <= 768)
@@ -158,6 +172,20 @@ export default function Header() {
               )}
             </div>
           )}
+          {/* MOBILE TOP-RIGHT DOWNLOAD BUTTON */}
+{/* {isMobile && (
+ <div>
+  <a 
+    href="/manaride.apk"
+    style={downloadMobileBtn}
+    download
+  >
+    <Download className="me-1" size={18} /> App
+  </a>
+</div>
+
+)} */}
+
         </div>
       </header>
 
@@ -355,3 +383,19 @@ const bottomNavItem = {
   flexDirection: "column",
   alignItems: "center",
 }
+const downloadMobileBtn = {
+  padding: "8px",
+  textDecoration: "none",
+  borderRadius: "15%",
+  background: "rgba(255, 255, 255, 0.05)",
+  border: "1px solid rgba(255, 111, 0, 0.4)",
+  backdropFilter: "blur(4px)",
+  WebkitBackdropFilter: "blur(4px)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "var(--primary-orange)",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+  animation: "floatBtn 3s ease-in-out infinite",
+};
+

@@ -737,22 +737,30 @@ export default function Home() {
           >
             Become a Partner
           </button>
-          <button
-            style={{
-              background: "transparent",
-              color: "var(--white)",
-              border: "2px solid var(--white)",
-              padding: "0.9rem 2rem",
-              borderRadius: "var(--border-radius)",
-              fontWeight: "700",
-              cursor: "pointer",
-              transition: "all 0.3s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-          >
-            Coming Soon: Mobile App
-          </button>
+         <a 
+  href="/bask.apk" 
+  download 
+  style={{ textDecoration: "none" }}
+>
+  <button
+    style={{
+      background: "transparent",
+      color: "var(--white)",
+      border: "2px solid var(--white)",
+      padding: "0.9rem 2rem",
+      borderRadius: "var(--border-radius)",
+      fontWeight: "700",
+      cursor: "pointer",
+      transition: "all 0.3s",
+      width: "100%",  // optional
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
+    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+  >
+    Download Mobile App
+  </button>
+</a>
+
         </div>
       </section>
     </div>

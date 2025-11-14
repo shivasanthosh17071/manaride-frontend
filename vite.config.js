@@ -8,8 +8,9 @@ export default defineConfig({
       "@": "/src",
     },
   },
-  server: {
-    host: true,     // ← allows access from mobile
-    port: 5173,     // ← default Vite port
+  // Important for correct path handling in Vercel
+  base: "/",
+  build: {
+    outDir: "dist",
   },
 });
