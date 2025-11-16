@@ -21,6 +21,9 @@ export default function OwnerDashboard() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
   const [toastMessage, setToastMessage] = useState("")
   const [editingVehicle, setEditingVehicle] = useState(null)
+  
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"))
+  const token = userInfo?.token
   const [formData, setFormData] = useState({
     name: "",
     type: "Car",
@@ -29,11 +32,10 @@ export default function OwnerDashboard() {
     location: "",
     description: "",
     image: "",
+  phone: userInfo?.mobile
   })
   const [loading, setLoading] = useState(false)
 
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"))
-  const token = userInfo?.token
 
   // Fetch owner's vehicles
 useEffect(() => {
@@ -147,6 +149,7 @@ useEffect(() => {
       location: vehicle.location,
       description: vehicle.description,
       image: vehicle.image,
+      phone: vehicle.mobile || userInfo?.mobile || "" 
     })
     setShowForm(true)
   }
@@ -161,6 +164,7 @@ useEffect(() => {
       location: "",
       description: "",
       image: "",
+       phone: userInfo?.mobile || "" 
     })
     setShowForm(true)
   }
@@ -187,7 +191,7 @@ useEffect(() => {
       value: ownerVehicles.filter((v) => v.status === "Booked").length,
       icon: "📅",
     },
-    { label: "Earnings (₹)", value: "45,000", icon: "💰" },
+    { label: "Earnings (₹)", value: "-", icon: "💰" },
   ]
 
   if (loading) {
@@ -694,23 +698,103 @@ useEffect(() => {
             />
           </div>
 
-          <div>
-            <label style={{ fontWeight: 600 }}>Location</label>
-            <input
-              type="text"
-              value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              required
-              placeholder="Bangalore"
-              style={{
-                width: "100%",
-                padding: "0.9rem",
-                borderRadius: "10px",
-                border: "2px solid #ddd",
-                marginTop: "0.3rem",
-              }}
-            />
-          </div>
+         <div>
+  <label style={{ fontWeight: 600 }}>Location</label>
+
+  <select
+    value={formData.location}
+    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+    required
+    style={{
+      width: "100%",
+      padding: "0.9rem",
+      borderRadius: "10px",
+      border: "2px solid #ddd",
+      marginTop: "0.3rem",
+      background: "white",
+      cursor: "pointer",
+    }}
+  >
+    <option value="">Select Location</option>
+
+    <option value="Abids">Abids</option>
+    <option value="Ameerpet">Ameerpet</option>
+    <option value="Adibatla">Adibatla</option>
+    <option value="Alwal">Alwal</option>
+    <option value="Attapur">Attapur</option>
+    <option value="Bachupally">Bachupally</option>
+    <option value="Banjara Hills">Banjara Hills</option>
+    <option value="Bandlaguda">Bandlaguda</option>
+    <option value="Barkatpura">Barkatpura</option>
+    <option value="Begumpet">Begumpet</option>
+    <option value="BHEL">BHEL</option>
+    <option value="Boduppal">Boduppal</option>
+    <option value="Bowenpally">Bowenpally</option>
+    <option value="Chanda Nagar">Chanda Nagar</option>
+    <option value="Charminar">Charminar</option>
+    <option value="Chintal">Chintal</option>
+    <option value="Dilsukhnagar">Dilsukhnagar</option>
+    <option value="ECIL">ECIL</option>
+    <option value="Erragadda">Erragadda</option>
+    <option value="Falaknuma">Falaknuma</option>
+    <option value="Gachibowli">Gachibowli</option>
+    <option value="Gajularamaram">Gajularamaram</option>
+    <option value="Gandipet">Gandipet</option>
+    <option value="Ghatkesar">Ghatkesar</option>
+    <option value="Gowlipura">Gowlipura</option>
+    <option value="Habsiguda">Habsiguda</option>
+    <option value="Hafeezpet">Hafeezpet</option>
+    <option value="Himayatnagar">Himayatnagar</option>
+    <option value="Hitech City">Hitech City</option>
+    <option value="Hyderguda">Hyderguda</option>
+    <option value="Jubilee Hills">Jubilee Hills</option>
+    <option value="Jeedimetla">Jeedimetla</option>
+    <option value="Kachiguda">Kachiguda</option>
+    <option value="Karkhana">Karkhana</option>
+    <option value="Karmanghat">Karmanghat</option>
+    <option value="Kondapur">Kondapur</option>
+    <option value="Kukatpally">Kukatpally</option>
+    <option value="KPHB">KPHB</option>
+    <option value="Kompally">Kompally</option>
+    <option value="LB Nagar">LB Nagar</option>
+    <option value="Lalgadi Malakpet">Lalgadi Malakpet</option>
+    <option value="Madhapur">Madhapur</option>
+    <option value="Malkajgiri">Malkajgiri</option>
+    <option value="Mallepally">Mallepally</option>
+    <option value="Manikonda">Manikonda</option>
+    <option value="Miyapur">Miyapur</option>
+    <option value="Mehdipatnam">Mehdipatnam</option>
+    <option value="Moosapet">Moosapet</option>
+    <option value="Nacharam">Nacharam</option>
+    <option value="Nampally">Nampally</option>
+    <option value="Narayanaguda">Narayanaguda</option>
+    <option value="Narsingi">Narsingi</option>
+    <option value="Nizampet">Nizampet</option>
+    <option value="Old City">Old City</option>
+    <option value="Padmarao Nagar">Padmarao Nagar</option>
+    <option value="Patancheru">Patancheru</option>
+    <option value="Pocharam">Pocharam</option>
+    <option value="Punjagutta">Punjagutta</option>
+    <option value="Raidurgam">Raidurgam</option>
+    <option value="Ramnagar">Ramnagar</option>
+    <option value="Sanath Nagar">Sanath Nagar</option>
+    <option value="Sainikpuri">Sainikpuri</option>
+    <option value="Sangareddy Road">Sangareddy Road</option>
+    <option value="Saroornagar">Saroornagar</option>
+    <option value="Secunderabad">Secunderabad</option>
+    <option value="Serilingampally">Serilingampally</option>
+    <option value="Shamshabad">Shamshabad</option>
+    <option value="Sikandrabad">Sikandrabad</option>
+    <option value="Somajiguda">Somajiguda</option>
+    <option value="Tarnaka">Tarnaka</option>
+    <option value="Tolichowki">Tolichowki</option>
+    <option value="Uppal">Uppal</option>
+    <option value="Vanasthalipuram">Vanasthalipuram</option>
+    <option value="Warfangal Highway">Warangal Highway</option>
+    <option value="Yousufguda">Yousufguda</option>
+  </select>
+</div>
+
         </div>
 
         {/* DESCRIPTION */}

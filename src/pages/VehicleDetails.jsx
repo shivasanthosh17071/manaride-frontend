@@ -354,11 +354,24 @@ export default function VehicleDetails() {
           {/* Booking Buttons */}
           {!isOwnerViewingOwnVehicle && (
             <div className="book-buttons">
-              <button onClick={handleWhatsAppBooking} className="vd-button-primary icon-btn">
-                <MessageCircle size={18} /> Book via WhatsApp
-              </button>
+            <button
+  onClick={handleWhatsAppBooking}
+  style={{
+    background: "transparent",
+    color: "#999",
+    border: "2px solid #999",
+    padding: "0.9rem 2rem",
+    borderRadius: "10px",
+    fontWeight: "600",
+    cursor: "not-allowed",
+    opacity: 0.5
+  }}
+>
+  <MessageCircle size={18} /> Book via WhatsApp
+</button>
 
-              <button onClick={openBooking} className="vd-button-outline">
+
+              <button onClick={openBooking} className="vd-button-primary icon-btn">
                 Reserve Now
               </button>
             </div>
@@ -374,13 +387,20 @@ export default function VehicleDetails() {
                 <strong>{vehicle.ownerName || "N/A"}</strong>
               </div>
 
-              <div>
-                <span className="spec-label">Phone</span>
-                <br />
-                <a href={`tel:${vehicle.phone}`} className="owner-phone">
-                  <Phone size={16} /> {vehicle.phone}
-                </a>
-              </div>
+             <div>
+  <span className="spec-label">Phone</span>
+  <br />
+
+  <a
+    href={`tel:${vehicle.phone}`}
+    className="owner-phone"
+    style={{ textDecoration: "none", color: "inherit" }}
+  >
+    <Phone size={16} /> 
+    {"*****" + vehicle.phone.slice(-4)}
+  </a>
+</div>
+
             </div>
           </div>
         </div>

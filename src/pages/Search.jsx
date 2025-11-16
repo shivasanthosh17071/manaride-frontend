@@ -4,19 +4,24 @@ import { useState, useEffect } from "react"
 import { Filter } from "lucide-react"
 import VehicleCard from "../components/VehicleCard"
 import { API_URL } from "../config/api"
+import { useLocation } from "react-router-dom"
 
 export default function Search() {
+  const routerLocation = useLocation()
+
   const [filters, setFilters] = useState({
     type: "All",
     location: "",
     fuel: "All",
     priceRange: 5000,
     status: "All",
+    date: "",
   })
 
   const [vehicles, setVehicles] = useState([])
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState("default")
+  const [availableLocations, setAvailableLocations] = useState([])
 
   // Mobile modal states
   const [isMobile, setIsMobile] = useState(false)
@@ -27,16 +32,45 @@ export default function Search() {
     const checkScreen = () => {
       setIsMobile(window.innerWidth < 768)
     }
-
     checkScreen()
     window.addEventListener("resize", checkScreen)
     return () => window.removeEventListener("resize", checkScreen)
   }, [])
 
+  // Fetch Locations once
+  useEffect(() => {
+    const loadLocations = async () => {
+      try {
+        const res = await fetch(`${API_URL}/vehicles/locations/all`)
+        const data = await res.json()
+        if (res.ok && Array.isArray(data)) setAvailableLocations(data)
+      } catch (err) {
+        console.error("Failed to fetch locations", err)
+      }
+    }
+    loadLocations()
+  }, [])
+
+  // Read query params from Home page search bar
+  useEffect(() => {
+    const params = new URLSearchParams(routerLocation.search)
+
+    const newFilters = { ...filters }
+
+    if (params.get("type")) newFilters.type = params.get("type")
+    if (params.get("location")) newFilters.location = params.get("location")
+    if (params.get("date")) newFilters.date = params.get("date")
+
+    setFilters(newFilters)
+  }, [routerLocation.search])
+
+  // Fetch vehicles
   const fetchVehicles = async () => {
     try {
       setLoading(true)
+
       const query = new URLSearchParams(filters).toString()
+
       const res = await fetch(`${API_URL}/vehicles?${query}`)
       const data = await res.json()
 
@@ -141,10 +175,9 @@ export default function Search() {
         <label style={{ fontWeight: "600", marginBottom: "0.8rem", display: "block" }}>
           Location
         </label>
-        <input
-          type="text"
+
+        <select
           value={filters.location}
-          placeholder="Enter location"
           onChange={(e) => handleFilterChange("location", e.target.value)}
           style={{
             width: "100%",
@@ -152,7 +185,14 @@ export default function Search() {
             border: "2px solid #eee",
             borderRadius: "8px",
           }}
-        />
+        >
+          <option value="">All Locations</option>
+          {availableLocations.map((loc, index) => (
+            <option key={index} value={loc}>
+              {loc}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Price Range */}
@@ -187,6 +227,7 @@ export default function Search() {
             fuel: "All",
             priceRange: 5000,
             status: "All",
+            date: "",
           })
         }
         style={{
@@ -221,6 +262,7 @@ export default function Search() {
           <aside
             className="filters-sidebar"
             style={{
+              width: "100%",
               background: "var(--white)",
               borderRadius: "var(--border-radius)",
               padding: "1.5rem",
@@ -258,7 +300,7 @@ export default function Search() {
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 style={{
-                  width:"35%",
+                  width: "35%",
                   padding: "0.6rem 1rem",
                   borderRadius: "8px",
                   border: "2px solid #eee",
@@ -272,9 +314,8 @@ export default function Search() {
 
               {/* Count */}
               <span
-                className="count-badge"
                 style={{
-                  fontSize:"12px",
+                  fontSize: "12px",
                   background: "var(--white)",
                   padding: "0rem 0.6rem",
                   borderRadius: "20px",
@@ -282,28 +323,30 @@ export default function Search() {
                   color: "#666",
                 }}
               >
-                {loading ? "Loading..." :`${vehicles.length}-vehicles`}
+                {loading ? "Loading..." : `${vehicles.length}-vehicles`}
               </span>
 
-              {/* Filter Button (Mobile Modal Toggle) */}
-            {isMobile && <button
-                onClick={() => setMobileFilterModal(true)}
-                style={{
-                  background: "var(--primary-orange)",
-                  border: "none",
-                  padding: "0.6rem 0.9rem",
-                  borderRadius: "8px",
-                  cursor: "pointer",
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  fontWeight: "600",
-                }}
-              >
-                <Filter size={18} />
-                Filters
-              </button>}
+              {/* Mobile filter button */}
+              {isMobile && (
+                <button
+                  onClick={() => setMobileFilterModal(true)}
+                  style={{
+                    background: "var(--primary-orange)",
+                    border: "none",
+                    padding: "0.6rem 0.9rem",
+                    borderRadius: "8px",
+                    cursor: "pointer",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontWeight: "600",
+                  }}
+                >
+                  <Filter size={18} />
+                  Filters
+                </button>
+              )}
             </div>
           </div>
 
@@ -345,7 +388,7 @@ export default function Search() {
         </main>
       </div>
 
-      {/* MOBILE MODAL — CENTERED */}
+      {/* MOBILE FILTER MODAL */}
       {isMobile && mobileFilterModal && (
         <div
           style={{
@@ -376,12 +419,13 @@ export default function Search() {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 style={{ fontWeight: "700", marginBottom: "1rem" }}>Filters</h3>
+
             {filtersSection()}
 
             <button
               onClick={() => setMobileFilterModal(false)}
               style={{
-                border:"none",
+                border: "none",
                 marginTop: "1.2rem",
                 background: "var(--primary-orange)",
                 color: "#fff",

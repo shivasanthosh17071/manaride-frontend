@@ -5,6 +5,7 @@ import { ArrowRight, Search, Star } from "lucide-react"
 import { useState, useEffect } from "react"
 import { vehicles } from "../data/vehicles"
 import VehicleCard from "../components/VehicleCard"
+import { API_URL } from "../config/api"
 import "./Home.css"
 
 export default function Home() {
@@ -12,12 +13,41 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [displayedVehicles, setDisplayedVehicles] = useState([])
 
+  // Search bar state
+  const [searchType, setSearchType] = useState("All Types")
+  const [searchLocation, setSearchLocation] = useState("")
+  const [startDate, setStartDate] = useState("")
+  const [availableLocations, setAvailableLocations] = useState([])
+  const [loadingLocations, setLoadingLocations] = useState(false)
+
   useEffect(() => {
     setDisplayedVehicles(vehicles.slice(0, 3))
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % vehicles.length)
     }, 5000)
     return () => clearInterval(interval)
+  }, [])
+
+  // fetch locations once
+  useEffect(() => {
+    const loadLocations = async () => {
+      setLoadingLocations(true)
+      try {
+        const res = await fetch(`${API_URL}/vehicles/locations/all`)
+        const data = await res.json()
+        if (res.ok && Array.isArray(data)) {
+          setAvailableLocations(data)
+        } else {
+          console.warn("Could not load locations", data)
+        }
+      } catch (err) {
+        console.error("Failed to fetch locations", err)
+      } finally {
+        setLoadingLocations(false)
+      }
+    }
+
+    loadLocations()
   }, [])
 
   const features = [
@@ -50,6 +80,14 @@ export default function Home() {
     { number: 2, title: "Book", text: "Connect directly with the verified owner via WhatsApp." },
     { number: 3, title: "Ride", text: "Pickup your vehicle and enjoy a smooth, reliable journey." },
   ]
+
+  const goToSearchWithFilters = () => {
+    const params = new URLSearchParams()
+    if (searchType && searchType !== "All Types") params.set("type", searchType)
+    if (searchLocation) params.set("location", searchLocation)
+    if (startDate) params.set("date", startDate)
+    navigate(`/search?${params.toString()}`)
+  }
 
   return (
     <div style={{ background: "var(--light-gray)" }}>
@@ -236,6 +274,8 @@ export default function Home() {
                   cursor: "pointer",
                   transition: "border-color 0.3s",
                 }}
+                value={searchType}
+                onChange={(e) => setSearchType(e.target.value)}
                 onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
                 onBlur={(e) => (e.target.style.borderColor = "#eee")}
               >
@@ -257,20 +297,49 @@ export default function Home() {
               >
                 Location
               </label>
-              <input
-                type="text"
-                placeholder="Enter location"
-                style={{
-                  width: "100%",
-                  padding: "0.8rem",
-                  border: "2px solid #eee",
-                  borderRadius: "8px",
-                  fontSize: "1rem",
-                  transition: "border-color 0.3s",
-                }}
-                onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
-                onBlur={(e) => (e.target.style.borderColor = "#eee")}
-              />
+
+              {/* Use dropdown of available locations; fallback to text input while loading or if empty */}
+              {availableLocations.length > 0 ? (
+                <select
+                  style={{
+                    width: "100%",
+                    padding: "0.8rem",
+                    border: "2px solid #eee",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                    cursor: "pointer",
+                    transition: "border-color 0.3s",
+                  }}
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
+                  onBlur={(e) => (e.target.style.borderColor = "#eee")}
+                >
+                  <option value="">All Locations</option>
+                  {availableLocations.map((loc, idx) => (
+                    <option key={idx} value={loc}>
+                      {loc}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type="text"
+                  placeholder={loadingLocations ? "Loading locations..." : "Enter location"}
+                  style={{
+                    width: "100%",
+                    padding: "0.8rem",
+                    border: "2px solid #eee",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                    transition: "border-color 0.3s",
+                  }}
+                  value={searchLocation}
+                  onChange={(e) => setSearchLocation(e.target.value)}
+                  onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
+                  onBlur={(e) => (e.target.style.borderColor = "#eee")}
+                />
+              )}
             </div>
 
             <div style={{ position: "relative" }}>
@@ -296,13 +365,15 @@ export default function Home() {
                   cursor: "pointer",
                   transition: "border-color 0.3s",
                 }}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
                 onBlur={(e) => (e.target.style.borderColor = "#eee")}
               />
             </div>
 
             <button
-              onClick={() => navigate("/search")}
+              onClick={goToSearchWithFilters}
               style={{
                 background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
                 color: "var(--white)",
@@ -420,89 +491,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Vehicles Carousel */}
-      {/* <section
-        style={{
-          background: "var(--white)",
-          padding: "4rem 2rem",
-          marginTop: "4rem",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
-              fontWeight: "800",
-              color: "var(--dark)",
-              marginBottom: "2rem",
-            }}
-          >
-            Featured Vehicles
-          </h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-              gap: "2rem",
-            }}
-          >
-            {displayedVehicles.map((vehicle, idx) => (
-              <div
-                key={vehicle.id}
-                style={{
-                  animation: `slideUp 0.6s ease-out ${idx * 0.15}s both`,
-                }}
-              >
-                <VehicleCard vehicle={vehicle} />
-              </div>
-            ))}
-          </div>
-
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "3rem",
-            }}
-          >
-            <button
-              onClick={() => navigate("/search")}
-              style={{
-                background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
-                color: "var(--white)",
-                border: "none",
-                padding: "1rem 2.5rem",
-                fontSize: "1rem",
-                fontWeight: "700",
-                borderRadius: "var(--border-radius)",
-                cursor: "pointer",
-                transition: "all 0.3s",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)"
-                e.currentTarget.style.boxShadow = "0 10px 30px rgba(255, 111, 0, 0.4)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)"
-                e.currentTarget.style.boxShadow = "none"
-              }}
-            >
-              View All Vehicles <ArrowRight size={20} />
-            </button>
-          </div>
-        </div>
-      </section> */}
-
-     
-          {/* CTA Section */}
+      {/* CTA Section */}
       <section
         style={{
           background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
@@ -554,7 +543,7 @@ export default function Home() {
         </button>
       </section>
 
-      {/* 🚀 How It Works Section */}
+      {/* How It Works Section */}
       <section
         style={{
           maxWidth: "1200px",
@@ -625,7 +614,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 💬 Testimonials Section */}
+      {/* Testimonials Section */}
       <section
         style={{
           background: "var(--white)",
@@ -691,7 +680,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 🤝 Partner / App Promo Section */}
+      {/* Partner / App Promo Section */}
       <section
         style={{
           background: "var(--dark)",
@@ -737,30 +726,25 @@ export default function Home() {
           >
             Become a Partner
           </button>
-         <a 
-  href="/bask.apk" 
-  download 
-  style={{ textDecoration: "none" }}
->
-  <button
-    style={{
-      background: "transparent",
-      color: "var(--white)",
-      border: "2px solid var(--white)",
-      padding: "0.9rem 2rem",
-      borderRadius: "var(--border-radius)",
-      fontWeight: "700",
-      cursor: "pointer",
-      transition: "all 0.3s",
-      width: "100%",  // optional
-    }}
-    onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
-    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-  >
-    Download Mobile App
-  </button>
-</a>
 
+          <a href="/bask.apk" download style={{ textDecoration: "none" }}>
+            <button
+              style={{
+                background: "transparent",
+                color: "var(--white)",
+                border: "2px solid var(--white)",
+                padding: "0.9rem 2rem",
+                borderRadius: "var(--border-radius)",
+                fontWeight: "700",
+                cursor: "pointer",
+                transition: "all 0.3s",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              Download Mobile App
+            </button>
+          </a>
         </div>
       </section>
     </div>
