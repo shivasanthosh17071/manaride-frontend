@@ -7,6 +7,7 @@ import { vehicles } from "../data/vehicles"
 import VehicleCard from "../components/VehicleCard"
 import { API_URL } from "../config/api"
 import "./Home.css"
+import BookingFlow from "../components/FAQ"
 
 export default function Home() {
   const navigate = useNavigate()
@@ -50,36 +51,87 @@ export default function Home() {
     loadLocations()
   }, [])
 
-  const features = [
-    { icon: "⚡", title: "Instant WhatsApp Booking", description: "Book your vehicle instantly via WhatsApp with verified owners." },
-    { icon: "✓", title: "Verified Vehicle Owners", description: "All vehicles and owners are verified for your safety and trust." },
-    { icon: "💰", title: "Flexible Pricing", description: "Transparent pricing with no hidden charges and flexible payment options." },
-    { icon: "📍", title: "Real-Time Availability", description: "Check real-time vehicle availability and instant confirmation." },
-  ]
+ const features = [
+  {
+    icon: "⚡",
+    title: "Instant Booking",
+    description:
+      "Book your vehicle instantly with real-time updates and a smooth booking experience.",
+  },
+  {
+    icon: "✓",
+    title: "Verified Vehicle Owners",
+    description:
+      "All vehicles and owners are verified to ensure trust, safety, and a reliable rental experience.",
+  },
+  {
+    icon: "💰",
+    title: "Flexible Pricing",
+    description:
+      "Transparent pricing with no hidden charges. Choose the ride that fits your budget.",
+  },
+  {
+    icon: "📍",
+    title: "Real-Time Availability",
+    description:
+      "Check nearby vehicles available right now and pick the one that suits your plan.",
+  },
+];
+
 
   const testimonials = [
-    {
-      name: "Rahul Verma",
-      text: "Mana Ride made renting so simple! I got my bike in 10 minutes and the owner was super helpful.",
-      rating: 5,
-    },
-    {
-      name: "Sneha Kapoor",
-      text: "Loved the transparent pricing and fast booking on WhatsApp. Highly recommend it!",
-      rating: 4,
-    },
-    {
-      name: "Aman Patel",
-      text: "Best experience so far. Real-time availability and smooth pickup process. Great platform!",
-      rating: 5,
-    },
-  ]
+  {
+    name: "Sai Teja",
+    text: "Mana Ride chala useful ga undi anna! Near-by lo car dorikindi, rates kuda decent. Super experience!",
+    rating: 5,
+  },
+  {
+    name: "Alekhya Reddy",
+    text: "Booking process baaga easy. Naku kavalsina time ki bike available undi. Owner kuda chala friendly!",
+    rating: 5,
+  },
+  {
+    name: "Mahesh Goud",
+    text: "Hyderabad lo e service super! Local vehicles instant ga dorukutayi. Money waste avvu ani confidence.",
+    rating: 4,
+  },
+];
 
-  const steps = [
-    { number: 1, title: "Search", text: "Browse available vehicles by type, location, and date." },
-    { number: 2, title: "Book", text: "Connect directly with the verified owner via WhatsApp." },
-    { number: 3, title: "Ride", text: "Pickup your vehicle and enjoy a smooth, reliable journey." },
-  ]
+const steps = [
+  {
+    number: 1,
+    title: "Search",
+    text: "Find nearby cars and bikes by selecting your location, vehicle type, and preferred dates.",
+  },
+  {
+    number: 2,
+    title: "Book",
+    text: "Choose the vehicle you like and confirm your booking instantly with the verified owner.",
+  },
+  {
+    number: 3,
+    title: "Ride",
+    text: "Pick up your vehicle at the scheduled time and enjoy a smooth, hassle-free journey.",
+  },
+];
+
+const partnerSteps = [
+  {
+    number: 1,
+    title: "Create Owner Account",
+    text: "Sign up as a vehicle owner by selecting the Owner role and entering your basic details. Quick and simple registration.",
+  },
+  {
+    number: 2,
+    title: "List Your Vehicle",
+    text: "Add all details and documents. Once submitted, you’ll receive a verification email after review.",
+  },
+  {
+    number: 3,
+    title: "Start Earning",
+    text: "Get bookings from nearby users, manage pickup, and earn steady income easily.",
+  },
+];
 
   const goToSearchWithFilters = () => {
     const params = new URLSearchParams()
@@ -94,7 +146,7 @@ export default function Home() {
       {/* Hero Section */}
       <section
         style={{
-          background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
+         background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
           padding: "4rem 2rem",
           position: "relative",
           overflow: "hidden",
@@ -149,7 +201,8 @@ export default function Home() {
               animation: "slideUp 0.8s ease-out",
             }}
           >
-            Your Premium Vehicle Booking Platform
+         Your Local Vehicle Booking Platform
+
           </h1>
 
           <p
@@ -160,7 +213,7 @@ export default function Home() {
               animation: "slideUp 0.8s ease-out 0.2s both",
             }}
           >
-            Rent cars and bikes from verified owners with real-time availability and instant WhatsApp booking
+Rent bikes and cars from verified owners with live availability and instant booking.
           </p>
 
           <div
@@ -220,8 +273,13 @@ export default function Home() {
                 e.currentTarget.style.background = "rgba(255,255,255,0.2)"
                 e.currentTarget.style.transform = "scale(1)"
               }}
+              onClick={() => {
+  document.getElementById("booking-flow")?.scrollIntoView({
+    behavior: "smooth",
+  });
+}}
             >
-              Learn More
+              Become Partner
             </button>
           </div>
         </div>
@@ -679,6 +737,78 @@ export default function Home() {
           ))}
         </div>
       </section>
+{/* Become a Partner Section */}
+<section  id="booking-flow"
+  style={{
+    maxWidth: "1200px",
+    margin: "5rem auto",
+    padding: "0 2rem",
+    textAlign: "center",
+  }}
+>
+  <h2
+    style={{
+      fontSize: "clamp(1.8rem, 4vw, 2.4rem)",
+      fontWeight: "800",
+      color: "var(--dark)",
+      marginBottom: "3rem",
+    }}
+  >
+    Become a Partner
+  </h2>
+
+  <div
+    className="d-flex flex-wrap justify-content-center gap-4"
+    style={{ rowGap: "2rem" }}
+  >
+    {partnerSteps.map((step) => (
+      <div
+        key={step.number}
+        style={{
+          background: "var(--white)",
+          padding: "2rem",
+          borderRadius: "var(--border-radius)",
+          width: "300px",
+          boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+          transition: "transform 0.3s, box-shadow 0.3s",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = "translateY(-10px)"
+          e.currentTarget.style.boxShadow =
+            "0 12px 30px rgba(255, 111, 0, 0.2)"
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = "translateY(0)"
+          e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.1)"
+        }}
+      >
+        <div
+          style={{
+            background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            color: "var(--white)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: "800",
+            fontSize: "1.2rem",
+            margin: "0 auto 1rem",
+          }}
+        >
+          {step.number}
+        </div>
+
+        <h4 style={{ fontWeight: "700", marginBottom: "0.5rem" }}>
+          {step.title}
+        </h4>
+
+        <p style={{ color: "#666", fontSize: "0.95rem" }}>{step.text}</p>
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* Partner / App Promo Section */}
       <section
@@ -727,7 +857,7 @@ export default function Home() {
             Become a Partner
           </button>
 
-          <a href="/bask.apk" download style={{ textDecoration: "none" }}>
+          <a href="/" download style={{ textDecoration: "none" }}>
             <button
               style={{
                 background: "transparent",
@@ -747,6 +877,7 @@ export default function Home() {
           </a>
         </div>
       </section>
+      <BookingFlow/>
     </div>
   )
 }

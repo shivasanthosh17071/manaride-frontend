@@ -403,6 +403,7 @@ const fetchVehicleDetails = async (id) => {
                       <span style={{ display: "block", color: "#999" }}>Location</span>
                       <strong>{submission.location}</strong>
                     </div>
+                    
                   </div>
 
                   {submission.reason && (
@@ -594,6 +595,8 @@ const fetchVehicleDetails = async (id) => {
         borderRadius: "8px",
         width: "90%",
         maxWidth: "600px",
+        maxHeight: "100vh",
+overflowY: "auto"
       }}
     >
       <h2 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "1rem" }}>
@@ -612,9 +615,90 @@ const fetchVehicleDetails = async (id) => {
         }}
       />
 
-      <p style={{ color: "#666", lineHeight: "1.6" }}>
-        {selectedSubmission.description || "No description provided."}
-      </p>
+     <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "1rem",
+    marginTop: "1rem",
+  }}
+>
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Owner</span>
+    <p style={{ fontWeight: "600" }}>{selectedSubmission.ownerName}</p>
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Phone</span>
+    <p style={{ fontWeight: "600" }}>{selectedSubmission.phone}</p>
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Fuel Type</span>
+    <p>{selectedSubmission.fuel}</p>
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Price Per Day</span>
+    <p>₹{selectedSubmission.pricePerDay}</p>
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Location</span>
+    <p>{selectedSubmission.location}</p>
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Status</span>
+    <p>{selectedSubmission.reviewStatus}</p>
+  </div>
+
+  {/* Documents */}
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>RC Book</span>
+    {selectedSubmission.rcBook ? (
+      <a href={selectedSubmission.rcBook} target="_blank" style={{ color: "blue" }}>
+        View RC Book
+      </a>
+    ) : (
+      <p>Not Provided</p>
+    )}
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Insurance</span>
+    {selectedSubmission.insurance ? (
+      <a href={selectedSubmission.insurance} target="_blank" style={{ color: "blue" }}>
+        View Insurance
+      </a>
+    ) : (
+      <p>Not Provided</p>
+    )}
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Pollution</span>
+    {selectedSubmission.pollution ? (
+      <a href={selectedSubmission.pollution} target="_blank" style={{ color: "blue" }}>
+        View PU Certificate
+      </a>
+    ) : (
+      <p>Not Provided</p>
+    )}
+  </div>
+
+  <div>
+    <span style={{ color: "#999", fontSize: "0.85rem" }}>Vehicle Permit</span>
+    {selectedSubmission.vehiclePermit ? (
+      <a href={selectedSubmission.vehiclePermit} target="_blank" style={{ color: "blue" }}>
+        View Permit
+      </a>
+    ) : (
+      <p>Not Provided</p>
+    )}
+  </div>
+</div>
+
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
         <div>

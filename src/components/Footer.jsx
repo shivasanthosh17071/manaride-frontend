@@ -78,7 +78,7 @@ export default function Footer() {
           <h5 style={{ marginBottom: "1rem", color: "var(--primary-orange)" }}>Follow Us</h5>
           <div style={{ display: "flex", gap: "1rem" }}>
             <a
-              href="#"
+              href="https://www.instagram.com/manaride.in/" target="_blank"
               style={{ color: "var(--primary-orange)", transition: "transform 0.2s" }}
               onMouseEnter={(e) => (e.target.style.transform = "rotate(20deg)")}
               onMouseLeave={(e) => (e.target.style.transform = "rotate(0)")}

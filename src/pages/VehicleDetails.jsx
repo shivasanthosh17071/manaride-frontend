@@ -355,7 +355,7 @@ export default function VehicleDetails() {
           {!isOwnerViewingOwnVehicle && (
             <div className="book-buttons">
             <button
-  onClick={handleWhatsAppBooking}
+  // onClick={handleWhatsAppBooking}
   style={{
     background: "transparent",
     color: "#999",
