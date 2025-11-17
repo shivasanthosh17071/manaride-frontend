@@ -1,23 +1,47 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import { User, Mail, Phone, Heart, CalendarCheck, LogOut } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { User, Mail, Phone, Heart, CalendarCheck, Edit, Save } from "lucide-react";
 
 export default function CustomerAccount() {
-  const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    mobile: "",
+  });
 
   useEffect(() => {
-    const info = JSON.parse(localStorage.getItem("userInfo"))
+    const info = JSON.parse(localStorage.getItem("userInfo"));
     if (!info || info.role !== "customer") {
-      navigate("/login")
-      return
+      navigate("/login");
+      return;
     }
-    setUser(info)
-  }, [navigate])
+    setUser(info);
 
-  if (!user) return null
+    setFormData({
+      name: info.name || "",
+      mobile: info.mobile || "",
+    });
+  }, [navigate]);
+
+  if (!user) return null;
+
+  // Save Updated Profile
+  const handleSave = () => {
+    const updatedUser = {
+      ...user,
+      name: formData.name,
+      mobile: formData.mobile,
+    };
+
+    localStorage.setItem("userInfo", JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    setEditMode(false);
+  };
 
   return (
     <div
@@ -38,29 +62,75 @@ export default function CustomerAccount() {
           marginBottom: "2rem",
         }}
       >
-        <h2
-          style={{
-            fontWeight: "800",
-            fontSize: "1.8rem",
-            background: `linear-gradient(90deg, var(--primary-orange), var(--accent-amber))`,
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
-          Customer Profile
-        </h2>
+        {/* Title + Edit Button */}
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <h2
+            style={{
+              fontWeight: "800",
+              fontSize: "1.8rem",
+              background: `linear-gradient(90deg, var(--primary-orange), var(--accent-amber))`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Customer Profile
+          </h2>
 
-        <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          <p style={{ display: "flex", gap: "0.5rem", color: "#555" }}>
-            <User size={18} /> {user.name}
-          </p>
-          <p style={{ display: "flex", gap: "0.5rem", color: "#555" }}>
-            <Mail size={18} /> {user.email}
-          </p>
-          <p style={{ display: "flex", gap: "0.5rem", color: "#555" }}>
-            <Phone size={18} /> {user.mobile}
-          </p>
+          {!editMode ? (
+            <button
+              onClick={() => setEditMode(true)}
+              style={editBtn}
+            >
+              <Edit size={16} /> Edit
+            </button>
+          ) : (
+            <button
+              onClick={handleSave}
+              style={saveBtn}
+            >
+              <Save size={16} /> Save
+            </button>
+          )}
         </div>
+
+        {/* View Mode */}
+        {!editMode && (
+          <div style={{ marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            <p style={infoRow}><User size={18} /> {user.name || "Not Added"}</p>
+            <p style={infoRow}><Mail size={18} /> {user.email || "Not Added"}</p>
+            <p style={infoRow}><Phone size={18} /> {user.mobile || "Not Added"}</p>
+          </div>
+        )}
+
+        {/* Edit Mode */}
+        {editMode && (
+          <div style={{ marginTop: "1.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+
+            {/* Name */}
+            <div>
+              <label style={labelStyle}>Full Name</label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
+                style={inputStyle}
+                placeholder="Enter your name"
+              />
+            </div>
+
+            {/* Mobile */}
+            <div>
+              <label style={labelStyle}>Mobile Number</label>
+              <input
+                type="text"
+                value={formData.mobile}
+                onChange={e => setFormData({ ...formData, mobile: e.target.value })}
+                style={inputStyle}
+                placeholder="Enter mobile number"
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Options */}
@@ -73,34 +143,66 @@ export default function CustomerAccount() {
           gap: "1rem",
         }}
       >
-        <button
-          onClick={() => navigate("/my-bookings")}
-          style={buttonStylePrimary}
-        >
+        <button onClick={() => navigate("/my-bookings")} style={buttonStylePrimary}>
           <CalendarCheck size={18} /> My Bookings
         </button>
 
-        <button
-          onClick={() => navigate("/favourites")}
-          style={buttonStylePrimary}
-        >
+        <button onClick={() => navigate("/favourites")} style={buttonStylePrimary}>
           <Heart size={18} /> Saved Vehicles
         </button>
-
-        {/* <button
-          onClick={() => {
-            localStorage.clear()
-            navigate("/")
-            window.dispatchEvent(new Event("authChanged"))
-          }}
-          style={buttonStyleDanger}
-        >
-          <LogOut size={18} /> Logout
-        </button> */}
       </div>
     </div>
-  )
+  );
 }
+
+/* Styles */
+
+const infoRow = {
+  display: "flex",
+  gap: "0.5rem",
+  color: "#555",
+};
+
+const labelStyle = {
+  fontWeight: "600",
+  color: "#444",
+  marginBottom: "5px",
+  display: "block",
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "0.8rem",
+  borderRadius: "8px",
+  border: "1px solid #ccc",
+  fontSize: "1rem",
+};
+
+const editBtn = {
+  background: "var(--primary-orange)",
+  border: "none",
+  color: "white",
+  padding: "0.5rem 1rem",
+  borderRadius: "8px",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
+  fontWeight: "600",
+};
+
+const saveBtn = {
+  background: "green",
+  border: "none",
+  color: "white",
+  padding: "0.5rem 1rem",
+  borderRadius: "8px",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
+  fontWeight: "600",
+};
 
 const buttonStylePrimary = {
   background: "white",
@@ -113,17 +215,4 @@ const buttonStylePrimary = {
   justifyContent: "center",
   gap: "0.5rem",
   cursor: "pointer",
-}
-
-const buttonStyleDanger = {
-  background: "#ffdddd",
-  color: "#c33",
-  padding: "1rem",
-  borderRadius: "10px",
-  border: "2px solid #c33",
-  fontWeight: "700",
-  display: "flex",
-  justifyContent: "center",
-  gap: "0.5rem",
-  cursor: "pointer",
-}
+};

@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom"
 import { Mail, Lock, Eye, EyeOff } from "lucide-react"
 import { API_URL } from "../config/api" // ✅ import backend base URL
 import "./Auth.css"
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   const navigate = useNavigate()
@@ -73,6 +74,39 @@ export default function Login() {
     }
   }
 
+const handleGoogleLogin = async (response) => {
+  try {
+    const result = await fetch(`${API_URL}/users/google-login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        credential: response.credential,
+        role: selectedRole,
+      }),
+    });
+
+    const data = await result.json();
+
+    if (!result.ok) {
+      setError(data.message || "Google login failed");
+      return;
+    }
+
+    localStorage.setItem("userInfo", JSON.stringify(data));
+    window.dispatchEvent(new Event("authChanged"));
+
+    if (data.role === "owner") {
+      window.location.replace("/owner-dashboard");
+    } else if (data.role === "admin") {
+      window.location.replace("/admin-dashboard");
+    } else {
+      window.location.replace("/");
+    }
+
+  } catch (err) {
+    setError("Google login error");
+  }
+}
 
   return (
     <div
@@ -108,6 +142,7 @@ export default function Login() {
               marginBottom: "0.5rem",
             }}
           >
+            
             Welcome Back
           </h1>
           <p style={{ color: "#999", fontSize: "0.95rem" }}>Sign in to your Mana Ride account</p>
@@ -245,7 +280,12 @@ export default function Login() {
             {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
-
+<div style={{ marginTop: "1rem", textAlign: "center" }}>
+  <GoogleLogin
+    onSuccess={(credentialResponse) => handleGoogleLogin(credentialResponse)}
+    onError={() => console.log("Google Login Failed")}
+  />
+</div>
         {/* Signup Link */}
         <div style={{ textAlign: "center", marginTop: "1.5rem", borderTop: "1px solid #eee", paddingTop: "1.5rem" }}>
           <span style={{ color: "#666", fontSize: "0.9rem" }}>
