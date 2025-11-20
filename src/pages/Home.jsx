@@ -463,6 +463,17 @@ Rent bikes and cars from verified owners with live availability and instant book
           </div>
         </div>
       </section>
+<img 
+  src="/manaridehomeE.png" 
+  alt="manaride banner" 
+  class="img-fluid d-none d-md-block "
+  style={{marginTop:"-7rem"}}
+/>
+<img 
+  src="/YourSolution.png" 
+  alt="manaride banner"
+  class="img-fluid d-block d-md-none"
+/>
 
       {/* Features Section */}
       <section

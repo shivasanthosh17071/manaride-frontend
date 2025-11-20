@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Filter } from "lucide-react"
+import { Bike, Car, Filter } from "lucide-react"
 import VehicleCard from "../components/VehicleCard"
 import { API_URL } from "../config/api"
 import { useLocation } from "react-router-dom"
@@ -371,19 +371,70 @@ export default function Search() {
               ))}
             </div>
           ) : (
-            <div
-              style={{
-                background: "var(--white)",
-                padding: "4rem 2rem",
-                borderRadius: "var(--border-radius)",
-                textAlign: "center",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-              }}
-            >
-              <div style={{ fontSize: "3rem" }}>🚗</div>
-              <h3 style={{ fontWeight: "700", marginTop: "1rem" }}>No Vehicles Found</h3>
-              <p style={{ color: "#666" }}>Try adjusting your filters.</p>
-            </div>
+                <div
+      className="d-flex justify-content-center"
+      style={{ padding: "4rem 1rem" }}
+    >
+      <div
+        style={{
+          background: "#fff",
+          padding: "3rem 2rem",
+          borderRadius: "18px",
+          textAlign: "center",
+          border: "1px solid #e6e6e6",
+          maxWidth: 420,
+          width: "100%",
+          boxShadow: "0 2px 18px rgba(0,0,0,0.06)",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        {/* Floating Animation */}
+        <style>
+          {`
+            @keyframes float {
+              0% { transform: translateY(0px); }
+              50% { transform: translateY(-10px); }
+              100% { transform: translateY(0px); }
+            }
+          `}
+        </style>
+
+        <div
+          style={{
+            width: 70,
+            height: 70,
+            borderRadius: "50%",
+            background: "#f5f5f5",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto 1.2rem",
+            animation: "float 2s ease-in-out infinite",
+          }}
+        >
+          <Bike size={36} color="#444" />
+        </div>
+
+        <h4 style={{ fontWeight: 700, color: "#333" }}>No Vehicles Found</h4>
+
+        <p style={{ color: "#777", marginTop: 6 }}>
+          Try adjusting your filters and search again.
+        </p>
+
+        <button
+          className="btn btn-outline-secondary mt-3"
+          style={{
+            padding: "0.55rem 1.3rem",
+            borderRadius: "10px",
+            fontWeight: 500,
+          }}
+          onClick={() => window.location.reload()}
+        >
+          Reset Filters
+        </button>
+      </div>
+    </div>
           )}
         </main>
       </div>

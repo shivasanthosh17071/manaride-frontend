@@ -14,12 +14,14 @@ import OwnerBookings from "./pages/OwnerBookings"
 import OwnerAccount from "./pages/OwnerAccount"
 import CustomerAccount from "./pages/CustomerAccount"
 import ScrollToTop from "./components/ScrollToTop"
+import IntroVideo from "./components/IntroVideo"
 
 export default function App() {
   return (
     <Router> <ScrollToTop behavior="smooth" /> 
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <Header />
+          <IntroVideo />
         <main style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Home />} />

@@ -1,7 +1,7 @@
 "use client"
 
 import { Link, useNavigate } from "react-router-dom"
-import { LogOut, User, CalendarDays, LayoutDashboard, Download } from "lucide-react"
+import { LogOut, User, CalendarDays, LayoutDashboard, Download, Home, Search } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export default function Header() {
@@ -105,18 +105,18 @@ if (!document.getElementById("floatBtnAnim")) {
           {/* DESKTOP NAV */}
           {!isMobile && (
             <div className="d-flex align-items-center gap-4">
-              <Link to="/search" style={linkStyle}>
+              <Link to="/search" style={linkStyle}  className="header-link-hover">
                 Browse Vehicles
               </Link>
 
               {/* CUSTOMER */}
               {user?.role === "customer" && (
                 <>
-                  <Link to="/my-bookings" style={linkStyle}>
+                  <Link to="/my-bookings" style={linkStyle}  className="header-link-hover">
                     <CalendarDays size={14} style={{ marginRight: 4 }} /> My Bookings
                   </Link>
 
-                  <Link to="/customer-profile" style={linkStyle}>
+                  <Link to="/customer-profile" style={linkStyle}  className="header-link-hover">
                     <User size={14} style={{ marginRight: 4 }} /> {user.name}
                   </Link>
                 </>
@@ -125,15 +125,15 @@ if (!document.getElementById("floatBtnAnim")) {
               {/* OWNER */}
               {user?.role === "owner" && (
                 <>
-                  <Link to="/owner-dashboard" style={linkStyle}>
+                  <Link to="/owner-dashboard" style={linkStyle}  className="header-link-hover">
                     <LayoutDashboard size={14} style={{ marginRight: 4 }} /> Dashboard
                   </Link>
 
-                  <Link to="/owner-bookings" style={linkStyle}>
+                  <Link to="/owner-bookings" style={linkStyle}  className="header-link-hover">
                     <CalendarDays size={14} style={{ marginRight: 4 }} /> Bookings
                   </Link>
 
-                  <Link to="/owner-account" style={linkStyle}>
+                  <Link to="/owner-account" style={linkStyle}  className="header-link-hover">
                     <User size={14} style={{ marginRight: 4 }} /> {user.name}
                   </Link>
                 </>
@@ -142,15 +142,15 @@ if (!document.getElementById("floatBtnAnim")) {
               {/* ADMIN */}
               {user?.role === "admin" && (
                 <>
-                  <Link to="/admin-dashboard" style={linkStyle}>
+                  <Link to="/admin-dashboard" style={linkStyle}  className="header-link-hover">
                     <LayoutDashboard size={14} style={{ marginRight: 4 }} /> Admin Panel
                   </Link>
 
-                  <Link to="/admin/users" style={linkStyle}>
+                  <Link to="/admin/users" style={linkStyle}  className="header-link-hover">
                     <User size={14} style={{ marginRight: 4 }} /> Manage Users
                   </Link>
 
-                  <Link to="/admin/vehicles" style={linkStyle}>
+                  <Link to="/admin/vehicles" style={linkStyle}  className="header-link-hover">
                     <User size={14} style={{ marginRight: 4 }} /> Manage Vehicles
                   </Link>
                 </>
@@ -159,7 +159,7 @@ if (!document.getElementById("floatBtnAnim")) {
               {/* AUTH BUTTONS */}
               {!user ? (
                 <>
-                  <Link to="/login" style={linkStyle}>Login</Link>
+                  <Link to="/login" style={linkStyle}  className="header-link-hover">Login</Link>
                   <Link to="/register" style={signupButton}>Sign Up</Link>
                 </>
               ) : (
@@ -206,12 +206,12 @@ if (!document.getElementById("floatBtnAnim")) {
           }}
         >
           <Link to="/" style={bottomNavItem}>
-            <LayoutDashboard size={22} />
+            <Home size={22} />
             <span>Home</span>
           </Link>
 
           <Link to="/search" style={bottomNavItem}>
-            <CalendarDays size={22} />
+            <Search size={22} />
             <span>Browse</span>
           </Link>
 
@@ -347,9 +347,71 @@ if (!document.getElementById("floatBtnAnim")) {
 const linkStyle = {
   color: "var(--white)",
   textDecoration: "none",
-  fontSize: "0.95rem",
+  fontSize: "0.99rem",
   display: "flex",
   alignItems: "center",
+}
+Object.assign(linkStyle, {
+  "--hover-color": "var(--primary-orange)",
+});
+// 🔥 Modern hover underline animation for all header links
+const headerHoverStyle = `.header-link-hover {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 3px;
+  transition: transform 0.28s cubic-bezier(.21,1.12,.29,1);
+}
+
+/* Magnetic micro-bounce */
+.header-link-hover:hover {
+  transform: translateY(-3px) scale(1.03);
+  color: var(--primary-orange) !important;
+}
+
+/* Dual-line futuristic underline */
+.header-link-hover::before,
+.header-link-hover::after {
+  content: "";
+  position: absolute;
+  bottom: -3px;
+  height: 2.5px;
+  width: 0;
+  background: var(--primary-orange);
+  border-radius: 10px;
+  transition: width 0.35s cubic-bezier(.22,1,.36,1);
+}
+
+/* Left bar */
+.header-link-hover::before {
+  left: 50%;
+  transform: translateX(-100%);
+}
+
+/* Right bar */
+.header-link-hover::after {
+  left: 50%;
+}
+
+/* On hover → bars slide outward */
+.header-link-hover:hover::before,
+.header-link-hover:hover::after {
+  width: 50%;
+}
+
+/* Neon Glow Edge */
+.header-link-hover:hover {
+  text-shadow:
+    0 0 8px rgba(255, 125, 40, 0.45),
+    0 0 18px rgba(255, 125, 40, 0.25);
+}
+`;
+
+
+if (!document.getElementById("headerHoverAnim")) {
+  const style = document.createElement("style");
+  style.id = "headerHoverAnim";
+  style.innerHTML = headerHoverStyle;
+  document.head.appendChild(style);
 }
 
 const signupButton = {
