@@ -8,6 +8,7 @@ import VehicleCard from "../components/VehicleCard"
 import { API_URL } from "../config/api"
 import "./Home.css"
 import BookingFlow from "../components/FAQ"
+import IntroVideo from "../components/IntroVideo"
 
 export default function Home() {
   const navigate = useNavigate()
@@ -143,6 +144,7 @@ const partnerSteps = [
 
   return (
     <div style={{ background: "var(--light-gray)" }}>
+      <IntroVideo />
       {/* Hero Section */}
       <section
         style={{
