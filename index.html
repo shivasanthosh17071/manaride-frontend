@@ -1,13 +1,67 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/manaridewhite.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mana Ride</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/manaridewhite.png" />
+
+  <!-- Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Browser Loader & Address Bar Color -->
+  <meta name="theme-color" content="#FF6F00" />
+
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/manaridewhite.png" />
+
+  <!-- SEO -->
+  <meta name="title" content="Mana Ride – Rent Bikes & Cars Anytime" />
+  <meta name="description"
+        content="Mana Ride offers fast and affordable bike & car rentals. Find your perfect vehicle and book instantly with easy pickup options." />
+  <meta name="keywords"
+        content="bike rental, car rental, Mana Ride, rent bikes, rent cars, vehicle booking" />
+
+  <!-- OpenGraph (For Social Media Preview) -->
+  <meta property="og:title" content="Mana Ride – Rent Bikes & Cars Anytime" />
+  <meta property="og:description"
+        content="Fast and affordable bike & car rentals. Book instantly with Mana Ride." />
+  <meta property="og:image" content="/manaridewhite.png" />
+  <meta property="og:url" content="https://manaride.in" />
+  <meta property="og:type" content="website" />
+
+  <!-- PWA Support (Optional but Recommended) -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+
+  <title>Mana Ride</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      background: #ffffff;
+    }
+
+    /* Optional Better Scroll Smoothness */
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

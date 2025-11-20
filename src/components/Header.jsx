@@ -16,11 +16,12 @@ export default function Header() {
   const [lastScrollY, setLastScrollY] = useState(0)
 const floatAnimation = `
 @keyframes floatBtn {
-  0% { transform: translateY(0px); box-shadow: 0 4px 12px rgba(255,111,0,0.35); }
-  50% { transform: translateY(-6px); box-shadow: 0 8px 18px rgba(255,111,0,0.55); }
-  100% { transform: translateY(0px); box-shadow: 0 4px 12px rgba(255,111,0,0.35); }
+  0% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
 }
 `;
+
 
 if (!document.getElementById("floatBtnAnim")) {
   const style = document.createElement("style");
@@ -172,19 +173,43 @@ if (!document.getElementById("floatBtnAnim")) {
               )}
             </div>
           )}
-          {/* MOBILE TOP-RIGHT DOWNLOAD BUTTON */}
-{/* {isMobile && (
- <div>
-  <a 
-    href="/manaride.apk"
-    style={downloadMobileBtn}
-    download
+          {/* MOBILE TOP-RIGHT  BUTTON */}
+{/* ⭐ FLOATING PROFILE LETTER BUTTON — GLASS DARK */}
+{isMobile && user && (
+  <Link
+    to={
+      user.role === "customer"
+        ? "/customer-profile"
+        : user.role === "owner"
+        ? "/owner-account"
+        : "/admin-dashboard"
+    }
+    style={{
+      position: "fixed",
+      top: "29px",
+      right: "12px",
+      zIndex: 3000,
+      width: "46px",
+      height: "46px",
+      borderRadius: "50%",
+      background: "rgba(0,0,0,0.35)",
+      border: "1px solid rgba(255,255,255,0.25)",
+      backdropFilter: "blur(8px)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#ffffff",
+      fontWeight: "700",
+      fontSize: "1.2rem",
+      textDecoration: "none",
+      boxShadow: "0 6px 15px rgba(0,0,0,0.45)",
+      animation: "floatBtn 3s ease-in-out infinite",
+    }}
   >
-    <Download className="me-1" size={18} /> App
-  </a>
-</div>
+    {user?.name?.charAt(0)?.toUpperCase() || "U"}
+  </Link>
+)}
 
-)} */}
 
         </div>
       </header>
@@ -223,10 +248,7 @@ if (!document.getElementById("floatBtnAnim")) {
                 <span>Bookings</span>
               </Link>
 
-              <Link to="/customer-profile" style={bottomNavItem}>
-                <User size={22} />
-                <span>Account</span>
-              </Link>
+            
             </>
           )}
 
@@ -243,10 +265,7 @@ if (!document.getElementById("floatBtnAnim")) {
                 <span>Bookings</span>
               </Link>
 
-              <Link to="/owner-account" style={bottomNavItem}>
-                <User size={22} />
-                <span>Account</span>
-              </Link>
+             
             </>
           )}
 
@@ -255,18 +274,12 @@ if (!document.getElementById("floatBtnAnim")) {
             <>
               <Link to="/admin-dashboard" style={bottomNavItem}>
                 <LayoutDashboard size={22} />
-                <span>Admin</span>
+                <span>A.Dash</span>
               </Link>
 
-              <Link to="/admin/users" style={bottomNavItem}>
-                <User size={22} />
-                <span>Users</span>
-              </Link>
+             
 
-              <Link to="/admin/vehicles" style={bottomNavItem}>
-                <User size={22} />
-                <span>Vehicles</span>
-              </Link>
+             
             </>
           )}
 

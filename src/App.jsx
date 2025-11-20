@@ -15,13 +15,14 @@ import OwnerAccount from "./pages/OwnerAccount"
 import CustomerAccount from "./pages/CustomerAccount"
 import ScrollToTop from "./components/ScrollToTop"
 import IntroVideo from "./components/IntroVideo"
+import AdminLogin from "./pages/AdminLogin"
 
 export default function App() {
   return (
     <Router> <ScrollToTop behavior="smooth" /> 
       <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
         <Header />
-          <IntroVideo />
+          {/* <IntroVideo /> */}
         <main style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -30,6 +31,7 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/owner-dashboard" element={<OwnerDashboard />} />
+            <Route path="/dev-log" element={<AdminLogin />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/my-bookings" element={<MyBookings />} />
                 <Route path="/owner-bookings" element={<OwnerBookings />} />

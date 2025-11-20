@@ -606,18 +606,21 @@ export default function OwnerDashboard() {
                       >
                         <Toggle2 size={16} />
                       </button>
-                      <button
-                        onClick={() => handleEditVehicle(vehicle)}
-                        style={{
-                          background: "rgba(100,150,200,0.1)",
-                          color: "#6496c8",
-                          border: "none",
-                          padding: "0.5rem",
-                          borderRadius: "6px",
-                        }}
-                      >
-                        <Edit2 size={16} />
-                      </button>
+                      {vehicle.reviewStatus !== "approved" && (
+  <button
+    onClick={() => handleEditVehicle(vehicle)}
+    style={{
+      background: "rgba(100,150,200,0.1)",
+      color: "#6496c8",
+      border: "none",
+      padding: "0.5rem",
+      borderRadius: "6px",
+    }}
+  >
+    <Edit2 size={16} />
+  </button>
+)}
+
                       <button
                         onClick={() => setShowDeleteConfirm(vehicle._id)}
                         style={{
@@ -1056,7 +1059,7 @@ export default function OwnerDashboard() {
                   )}
                 </div>
               </div>
-<small style={{ color: "#888", fontSize: "0.8rem" }}>
+<small style={{ color: "#ed1717ff", fontSize: "0.8rem" }}>
   Allowed formats: JPG, JPEG, PNG, PDF (if not uploading correctly, once recheck)
 </small>
 

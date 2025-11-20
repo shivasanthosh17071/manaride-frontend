@@ -10,9 +10,9 @@ export default function OwnerBookings() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState("")
-  const [selectedBooking, setSelectedBooking] = useState(null)
+  const [showAcceptedModal, setShowAcceptedModal] = useState(false) // ⭐ NEW MODAL STATE
 
-  // ✅ Memoized userInfo (prevents re-renders)
+  // Memoized userInfo
   const userInfo = useMemo(() => {
     return JSON.parse(localStorage.getItem("userInfo"))
   }, [])
@@ -21,7 +21,7 @@ export default function OwnerBookings() {
   const role = userInfo?.role
 
   // ============================================
-  //   FETCH OWNER BOOKINGS — RUN ONLY ONCE
+  //   FETCH OWNER BOOKINGS
   // ============================================
   useEffect(() => {
     if (!token) {
@@ -52,7 +52,7 @@ export default function OwnerBookings() {
     }
 
     fetchOwnerBookings()
-  }, [token, role, navigate]) // 👈 userInfo REMOVED
+  }, [token, role, navigate])
 
   // ============================================
   //   UPDATE BOOKING STATUS
@@ -74,14 +74,20 @@ export default function OwnerBookings() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || "Failed to update booking")
 
+      // Update UI
       setBookings((prev) =>
         prev.map((b) =>
           b._id === id ? { ...b, status, rejectedReason: reason || "" } : b
         )
       )
 
-      setMessage(`Booking ${status === "confirmed" ? "accepted" : "rejected"} successfully.`)
-      setTimeout(() => setMessage(""), 3000)
+      // ⭐ SHOW MODAL FOR ACCEPT
+      if (status === "confirmed") {
+        setShowAcceptedModal(true)
+      } else {
+        setMessage("Booking rejected successfully.")
+        setTimeout(() => setMessage(""), 3000)
+      }
     } catch (err) {
       setMessage(err.message)
     }
@@ -121,7 +127,6 @@ export default function OwnerBookings() {
           padding: "4rem 2rem 3rem",
           textAlign: "center",
           position: "relative",
-          overflow: "hidden",
         }}
       >
         <h1
@@ -129,20 +134,11 @@ export default function OwnerBookings() {
             fontSize: "clamp(2rem, 5vw, 3rem)",
             fontWeight: "800",
             marginBottom: "1rem",
-            zIndex: 2,
-            position: "relative",
           }}
         >
           Vehicle Owner Bookings
         </h1>
-        <p
-          style={{
-            fontSize: "1.1rem",
-            color: "rgba(255,255,255,0.95)",
-            zIndex: 2,
-            position: "relative",
-          }}
-        >
+        <p style={{ fontSize: "1.1rem", color: "rgba(255,255,255,0.95)" }}>
           Manage all booking requests for your listed vehicles.
         </p>
       </section>
@@ -163,7 +159,7 @@ export default function OwnerBookings() {
         </div>
       )}
 
-      {/* Booking Cards */}
+      {/* Booking LIST */}
       <section className="container my-5">
         {bookings.length === 0 ? (
           <div
@@ -175,135 +171,183 @@ export default function OwnerBookings() {
             </h3>
           </div>
         ) : (
-          <div className="row g-4">
+          <div>
             {bookings.map((b, idx) => (
-              <div key={b._id} className="col-12 col-md-6 col-lg-4">
-                <div
-                  className="card h-100 border-0 shadow"
+              <div
+                key={b._id}
+                style={{
+                  display: "flex",
+                  gap: "12px",
+                  padding: "14px 0",
+                  borderBottom: "1px solid #ddd",
+                  animation: `slideUp 0.4s ease-out ${idx * 0.05}s both`,
+                }}
+              >
+                {/* Small Image */}
+                <img
+                  src={b.vehicleId?.image || "/placeholder.svg"}
                   style={{
-                    borderRadius: "15px",
-                    transition: "0.3s",
-                    animation: `slideUp 0.6s ease-out ${idx * 0.1}s both`,
+                    width: "55px",
+                    height: "55px",
+                    borderRadius: "8px",
+                    objectFit: "cover",
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-8px)"
-                    e.currentTarget.style.boxShadow =
-                      "0 12px 30px rgba(255, 111, 0, 0.25)"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)"
-                    e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.1)"
-                  }}
-                >
-                  {/* Image */}
-                  <div className="position-relative">
-                    <img
-                      src={b.vehicleId?.image || "/placeholder.svg"}
-                      className="card-img-top"
-                      style={{ height: "200px", objectFit: "cover" }}
-                      alt="vehicle"
-                    />
+                />
 
-                    {/* Status Badge */}
-                    <span
-                      className="position-absolute top-0 end-0 m-2 px-3 py-1 fw-bold"
+                {/* MAIN CONTENT */}
+                <div style={{ flex: 1 }}>
+                  {/* First Line */}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "6px",
+                      fontSize: "0.9rem",
+                      color: "#333",
+                    }}
+                  >
+                    <strong>{b.vehicleId?.name}</strong>
+                    <span>• {b.status}</span>
+                    <span>• {b.date}</span>
+                    <span>• {b.timeSlot}</span>
+                    <span>• {b.days} Days</span>
+                  </div>
+
+                  {/* Second Line */}
+                  <div style={{ fontSize: "0.8rem", color: "#777" }}>
+                    {b.vehicleId?.location} • {b.userId?.name || "Customer"}
+                  </div>
+
+                  {/* Accept / Reject */}
+                  {b.status === "pending" && (
+                    <div
                       style={{
-                        borderRadius: "20px",
-                        fontSize: "0.9rem",
-                        background:
-                          b.status === "confirmed"
-                            ? "#d4f8d4"
-                            : b.status === "rejected"
-                            ? "#fdd8d8"
-                            : b.status === "cancelled"
-                            ? "#eee"
-                            : "#fff3cd",
-                        color:
-                          b.status === "confirmed"
-                            ? "#2d7d2d"
-                            : b.status === "rejected"
-                            ? "#c86464"
-                            : b.status === "cancelled"
-                            ? "#999"
-                            : "#d4a500",
+                        display: "flex",
+                        gap: "10px",
+                        marginTop: "8px",
                       }}
                     >
-                      {b.status}
-                    </span>
-                  </div>
+                      <button
+                        onClick={() =>
+                          handleStatusUpdate(b._id, "confirmed")
+                        }
+                        style={{
+                          flex: 1,
+                          padding: "6px 0",
+                          fontSize: "0.8rem",
+                          fontWeight: "600",
+                          borderRadius: "6px",
+                          border: "1px solid #2d7d2d",
+                          background: "#e6fbe6",
+                          color: "#2d7d2d",
+                        }}
+                      >
+                        Accept
+                      </button>
 
-                  {/* Card Body */}
-                  <div className="card-body">
-                    <h5 className="card-title fw-bold">{b.vehicleId?.name}</h5>
-
-                    <p className="text-muted small mb-2 d-flex align-items-center">
-                      <Car size={16} className="me-2" />
-                      {b.vehicleId?.type} • ₹{b.vehicleId?.pricePerDay}/day
-                    </p>
-
-                    <div className="row text-muted small mb-3">
-                      <div className="col-6 mb-2">
-                        <Calendar size={16} className="me-1" />
-                        {b.date}
-                      </div>
-                      <div className="col-6 mb-2">
-                        <Clock size={16} className="me-1" />
-                        {b.timeSlot}
-                      </div>
-                      <div className="col-6 mb-2">
-                        <MapPin size={16} className="me-1" />
-                        {b.vehicleId?.location}
-                      </div>
-                      <div className="col-6 mb-2">Days: {b.days}</div>
+                      <button
+                        onClick={() =>
+                          handleStatusUpdate(b._id, "rejected")
+                        }
+                        style={{
+                          flex: 1,
+                          padding: "6px 0",
+                          fontSize: "0.8rem",
+                          fontWeight: "600",
+                          borderRadius: "6px",
+                          border: "1px solid #c86464",
+                          background: "#ffecec",
+                          color: "#c86464",
+                        }}
+                      >
+                        Reject
+                      </button>
                     </div>
+                  )}
 
-                    <div className="d-flex align-items-center text-muted small mb-3">
-                      <User size={16} className="me-2" />
-                      {b.userId?.name || "Customer"}
+                  {/* Rejected Reason */}
+                  {b.rejectedReason && (
+                    <div
+                      style={{
+                        marginTop: "8px",
+                        background: "#fff5f5",
+                        padding: "6px 8px",
+                        borderRadius: "6px",
+                        fontSize: "0.8rem",
+                        color: "#c86464",
+                      }}
+                    >
+                      Reason: {b.rejectedReason}
                     </div>
-
-                    {/* Rejected Reason */}
-                    {b.rejectedReason && (
-                      <p className="p-2 rounded" style={{ background: "#fff5f5", color: "#c86464" }}>
-                        Reason: {b.rejectedReason}
-                      </p>
-                    )}
-
-                    {/* Buttons */}
-                    {b.status === "pending" && (
-                      <div className="d-flex gap-2 mt-3">
-                        <button
-                          onClick={() => handleStatusUpdate(b._id, "confirmed")}
-                          className="btn w-50 fw-bold"
-                          style={{
-                            background: "#e6fbe6",
-                            color: "#2d7d2d",
-                            border: "1px solid #2d7d2d",
-                          }}
-                        >
-                          <CheckCircle size={16} className="me-1" /> Accept
-                        </button>
-
-                        <button
-                          onClick={() => handleStatusUpdate(b._id, "rejected")}
-                          className="btn w-50 fw-bold"
-                          style={{
-                            background: "#fff3f3",
-                            color: "#c86464",
-                            border: "1px solid #c86464",
-                          }}
-                        >
-                          <XCircle size={16} className="me-1" /> Reject
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
       </section>
+
+      {/* ⭐ ACCEPTED MODAL */}
+      {showAcceptedModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              width: "90%",
+              maxWidth: "380px",
+              borderRadius: "14px",
+              padding: "2rem 1.5rem",
+              textAlign: "center",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+              animation: "slideUp 0.3s ease-out",
+            }}
+          >
+            <h3 style={{ fontWeight: "700", marginBottom: "1rem", color: "#333" }}>
+              Booking Accepted 🎉
+            </h3>
+
+            <p
+              style={{
+                fontSize: "0.95rem",
+                color: "#555",
+                marginBottom: "1.5rem",
+              }}
+            >
+              Please <strong>check your email</strong> and{" "}
+              <strong>contact the customer</strong> to arrange the pickup.
+            </p>
+
+            <button
+              onClick={() => setShowAcceptedModal(false)}
+              style={{
+                background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
+                color: "white",
+                border: "none",
+                padding: "0.8rem 1.5rem",
+                borderRadius: "8px",
+                fontWeight: "600",
+                cursor: "pointer",
+              }}
+            >
+              OK, Got It
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

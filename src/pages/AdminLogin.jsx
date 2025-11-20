@@ -5,16 +5,11 @@ import { useNavigate, Link } from "react-router-dom"
 import { Mail, Lock, Eye, EyeOff } from "lucide-react"
 import { API_URL } from "../config/api"
 import "./Auth.css"
-import { GoogleLogin } from "@react-oauth/google";
 
-export default function Login() {
+export default function AdminLogin() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
-
-  // ⭐ ONLY customer + owner (admin removed)
-  const [selectedRole, setSelectedRole] = useState("customer")
-
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
@@ -36,13 +31,11 @@ export default function Login() {
 
       const response = await fetch(`${API_URL}/users/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
-          role: selectedRole, // only customer or owner
+          role: "admin", // ⭐ Only admin
         }),
       })
 
@@ -54,54 +47,16 @@ export default function Login() {
         return
       }
 
-      // Save user
       localStorage.setItem("userInfo", JSON.stringify(data))
       window.dispatchEvent(new Event("authChanged"))
 
-      // ⭐ ADMIN REMOVED
-      if (data.role === "owner") {
-        window.location.replace("/owner-dashboard")
-      } else {
-        window.location.replace("/")
-      }
+      // ⭐ Admin redirect
+      window.location.replace("/admin-dashboard")
 
     } catch (err) {
       console.error(err)
       setError("Server error, please try again later.")
       setLoading(false)
-    }
-  }
-
-  const handleGoogleLogin = async (response) => {
-    try {
-      const result = await fetch(`${API_URL}/users/google-login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          credential: response.credential,
-          role: selectedRole, // only customer or owner
-        }),
-      })
-
-      const data = await result.json()
-
-      if (!result.ok) {
-        setError(data.message || "Google login failed")
-        return
-      }
-
-      localStorage.setItem("userInfo", JSON.stringify(data))
-      window.dispatchEvent(new Event("authChanged"))
-
-      // ⭐ ADMIN REMOVED
-      if (data.role === "owner") {
-        window.location.replace("/owner-dashboard")
-      } else {
-        window.location.replace("/")
-      }
-
-    } catch (err) {
-      setError("Google login error")
     }
   }
 
@@ -139,41 +94,9 @@ export default function Login() {
               marginBottom: "0.5rem",
             }}
           >
-            Welcome Back
+            Admin Login
           </h1>
-          <p style={{ color: "#999", fontSize: "0.95rem" }}>Sign in to your Mana Ride account</p>
-        </div>
-
-        {/* ⭐ ROLE SWITCHER (Admin removed, UI same spacing) */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr", // ⬅️ only 2 buttons now
-            gap: "0.5rem",
-            marginBottom: "2rem",
-            background: "var(--light-gray)",
-            padding: "0.5rem",
-            borderRadius: "10px",
-          }}
-        >
-          {["customer", "owner"].map((role) => (
-            <button
-              key={role}
-              onClick={() => setSelectedRole(role)}
-              style={{
-                background: selectedRole === role ? "var(--white)" : "transparent",
-                border: "none",
-                padding: "0.6rem",
-                borderRadius: "8px",
-                fontSize: "0.85rem",
-                fontWeight: "600",
-                cursor: "pointer",
-                color: selectedRole === role ? "var(--primary-orange)" : "#999",
-              }}
-            >
-              {role.charAt(0).toUpperCase() + role.slice(1)}
-            </button>
-          ))}
+          <p style={{ color: "#999", fontSize: "0.95rem" }}>Sign in to manage Mana Ride</p>
         </div>
 
         {error && (
@@ -192,18 +115,35 @@ export default function Login() {
         )}
 
         <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+          {/* Email */}
           <div>
-            <label style={{ fontSize: "0.85rem", fontWeight: "600", marginBottom: "0.5rem", display: "block" }}>
+            <label
+              style={{
+                fontSize: "0.85rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+                display: "block",
+              }}
+            >
               Email Address
             </label>
             <div style={{ position: "relative" }}>
-              <Mail size={18} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--primary-orange)" }} />
+              <Mail
+                size={18}
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--primary-orange)",
+                }}
+              />
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="you@example.com"
+                placeholder="admin@example.com"
                 style={{
                   width: "100%",
                   padding: "0.8rem 0.8rem 0.8rem 2.5rem",
@@ -214,18 +154,35 @@ export default function Login() {
             </div>
           </div>
 
+          {/* Password */}
           <div>
-            <label style={{ fontSize: "0.85rem", fontWeight: "600", marginBottom: "0.5rem", display: "block" }}>
+            <label
+              style={{
+                fontSize: "0.85rem",
+                fontWeight: "600",
+                marginBottom: "0.5rem",
+                display: "block",
+              }}
+            >
               Password
             </label>
             <div style={{ position: "relative" }}>
-              <Lock size={18} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--primary-orange)" }} />
+              <Lock
+                size={18}
+                style={{
+                  position: "absolute",
+                  left: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  color: "var(--primary-orange)",
+                }}
+              />
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter your password"
+                placeholder="Enter admin password"
                 style={{
                   width: "100%",
                   padding: "0.8rem 2.5rem 0.8rem 2.5rem",
@@ -252,6 +209,7 @@ export default function Login() {
             </div>
           </div>
 
+          {/* Login Button */}
           <button
             type="submit"
             disabled={loading}
@@ -271,21 +229,26 @@ export default function Login() {
           </button>
         </form>
 
-        <div style={{ marginTop: "1rem", textAlign: "center" }}>
-          <GoogleLogin
-            onSuccess={(credentialResponse) => handleGoogleLogin(credentialResponse)}
-            onError={() => console.log("Google Login Failed")}
-          />
-        </div>
-
-        <div style={{ textAlign: "center", marginTop: "1.5rem", borderTop: "1px solid #eee", paddingTop: "1.5rem" }}>
+        {/* Go Back */}
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "1.5rem",
+            borderTop: "1px solid #eee",
+            paddingTop: "1.5rem",
+          }}
+        >
           <span style={{ color: "#666", fontSize: "0.9rem" }}>
-            Don’t have an account?{" "}
+            Not an admin?{" "}
             <Link
-              to="/register"
-              style={{ color: "var(--primary-orange)", textDecoration: "none", fontWeight: "700" }}
+              to="/login"
+              style={{
+                color: "var(--primary-orange)",
+                textDecoration: "none",
+                fontWeight: "700",
+              }}
             >
-              Sign Up
+              Go Back
             </Link>
           </span>
         </div>

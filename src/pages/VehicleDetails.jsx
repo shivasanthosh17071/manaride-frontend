@@ -25,6 +25,7 @@ export default function VehicleDetails() {
   const [showBooking, setShowBooking] = useState(false)
   const [bookingLoading, setBookingLoading] = useState(false)
   const [bookingMessage, setBookingMessage] = useState("")
+  const [showSuccessModal, setShowSuccessModal] = useState(false) // <-- new
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -219,11 +220,10 @@ export default function VehicleDetails() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || "Booking failed")
 
-      setBookingMessage("Booking request submitted!")
-      setTimeout(() => {
-        setShowBooking(false)
-        setBookingMessage("")
-      }, 1500)
+      // Close booking form and show success modal
+      setShowBooking(false)
+      setShowSuccessModal(true)
+      setBookingMessage("")
     } catch (err) {
       setBookingMessage(err.message || "Booking failed")
     } finally {
@@ -312,7 +312,7 @@ export default function VehicleDetails() {
             <div className="specs-card">
               <h3>Vehicle Specifications</h3>
               <div className="specs-grid">
-                {[
+                {[ 
                   { label: "Vehicle Type", value: vehicle.type },
                   { label: "Fuel Type", value: vehicle.fuel },
                   { label: "Price / Day", value: `₹${vehicle.pricePerDay}` },
@@ -352,55 +352,62 @@ export default function VehicleDetails() {
           )}
 
           {/* Booking Buttons */}
-          {!isOwnerViewingOwnVehicle && (
-            <div className="book-buttons">
-            <button
-  // onClick={handleWhatsAppBooking}
-  style={{
-    background: "transparent",
-    color: "#999",
-    border: "2px solid #999",
-    padding: "0.9rem 2rem",
-    borderRadius: "10px",
-    fontWeight: "600",
-    cursor: "not-allowed",
-    opacity: 0.5
-  }}
->
-  <MessageCircle size={18} /> Book via WhatsApp
-</button>
+          {!isOwnerViewingOwnVehicle && vehicle.status === "Available" && (
+            <div className="book-buttons" style={{ display: "flex", gap: 12 }}>
+              <button
+                onClick={handleWhatsAppBooking}
+                style={{
+                  background: "transparent",
+                  color: "#333",
+                  border: "2px solid #ddd",
+                  padding: "0.75rem 1.2rem",
+                  borderRadius: "10px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <MessageCircle size={18} /> Book via WhatsApp
+              </button>
 
-
-              <button onClick={openBooking} className="vd-button-primary icon-btn">
+              <button onClick={openBooking} className="vd-button-primary icon-btn" style={{ padding: "0.75rem 1.4rem" }}>
                 Reserve Now
               </button>
+            </div>
+          )}
+          {!isOwnerViewingOwnVehicle && vehicle.status !== "Available" && (
+            <div className="vehicle-unavailable-msg">
+              <p style={{ color: "#c33", fontWeight: "600" }}>
+                This vehicle is currently booked.
+              </p>
             </div>
           )}
 
           {/* Owner Info */}
           <div className="owner-box">
             <h3>Owner Information</h3>
-            <div className="owner-details">
+            <div className="owner-details" style={{ display: "flex", gap: 24, alignItems: "center" }}>
               <div>
                 <span className="spec-label">Name</span>
                 <br />
                 <strong>{vehicle.ownerName || "N/A"}</strong>
               </div>
 
-             <div>
-  <span className="spec-label">Phone</span>
-  <br />
+              <div>
+                <span className="spec-label">Phone</span>
+                <br />
 
-  <a
-    href={`tel:${vehicle.phone}`}
-    className="owner-phone"
-    style={{ textDecoration: "none", color: "inherit" }}
-  >
-    <Phone size={16} /> 
-    {"*****" + vehicle.phone.slice(-4)}
-  </a>
-</div>
-
+                <a
+                  href={`tel:${vehicle.phone}`}
+                  className="owner-phone"
+                  style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center", gap: 8 }}
+                >
+                  <Phone size={16} />
+                  {"*****" + (vehicle.phone ? vehicle.phone.slice(-4) : "")}
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -498,21 +505,30 @@ export default function VehicleDetails() {
                 <div>
                   <label>Mobile</label>
                   <input
-                    type="tel"
-                    value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    required
-                  />
+  type="text"
+  inputMode="numeric"
+  pattern="[0-9]*"
+  maxLength="10"
+  value={form.phone}
+  onChange={(e) => {
+    const onlyNumbers = e.target.value.replace(/\D/g, ""); // removes non-numbers
+    setForm({ ...form, phone: onlyNumbers });
+  }}
+  required
+/>
+
                 </div>
 
                 <div>
                   <label>Pick a date</label>
-                  <input
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => setForm({ ...form, date: e.target.value })}
-                    required
-                  />
+                <input
+  type="date"
+  min={new Date().toISOString().split("T")[0]}   // ⬅️ This blocks past dates
+  value={form.date}
+  onChange={(e) => setForm({ ...form, date: e.target.value })}
+  required
+/>
+
                 </div>
               </div>
 
@@ -593,6 +609,82 @@ export default function VehicleDetails() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* SUCCESS MODAL AFTER BOOKING */}
+      {showSuccessModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              width: "90%",
+              maxWidth: "360px",
+              borderRadius: "14px",
+              padding: "2rem 1.5rem",
+              textAlign: "center",
+              animation: "slideUp 0.3s ease-out",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.2)",
+            }}
+          >
+            <h2 style={{ fontWeight: "700", marginBottom: "1rem" }}>
+              Booking Submitted!
+            </h2>
+
+            <p style={{ color: "#555", fontSize: "0.95rem", marginBottom: "1.5rem" }}>
+              Please <strong>check your email</strong>. When the vehicle owner accepts your booking,
+              you will receive the pickup details and the owner's contact number.
+            </p>
+
+            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+              <button
+                onClick={() => setShowSuccessModal(false)}
+                style={{
+                  background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
+                  color: "white",
+                  border: "none",
+                  padding: "0.8rem 1.4rem",
+                  borderRadius: "8px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                OK
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false)
+                  navigate("/my-bookings")
+                }}
+                style={{
+                  background: "transparent",
+                  color: "#333",
+                  border: "1px solid #ddd",
+                  padding: "0.75rem 1.2rem",
+                  borderRadius: "8px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                View My Bookings
+              </button>
+            </div>
           </div>
         </div>
       )}
