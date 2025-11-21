@@ -14,7 +14,7 @@ export default function VideoCard() {
         margin: "0 auto",
       }}
     >
-      <video
+      {/* <video
         src="/commingsoon.mp4"
         autoPlay
         loop
@@ -27,7 +27,15 @@ export default function VideoCard() {
           outline: "none",
           pointerEvents: "none",   // user cannot click or pause
         }}
-      />
+      /> */}
+      <img src="/earnMoneyWithYourBike.png" alt="earnMoneyWithYourBike banner"
+        style={{
+          width: "100%",
+          borderRadius: "10px",
+          outline: "none",
+          // pointerEvents: "none",   // user cannot click or pause
+        }}/>
+
     </div>
   );
 }
