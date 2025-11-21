@@ -1,7 +1,7 @@
 "use client"
 
 import { Link, useNavigate } from "react-router-dom"
-import { LogOut, User, CalendarDays, LayoutDashboard, Download, Home, Search } from "lucide-react"
+import { LogOut, User, CalendarDays, LayoutDashboard, Download, Home, Search, Accessibility, PowerOffIcon, CircleUserRound, CircleUser } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export default function Header() {
@@ -99,7 +99,7 @@ if (!document.getElementById("floatBtnAnim")) {
               className="ms-"
               src="/manarideblack.png"
               alt="Mana Ride Logo"
-              style={{ height: "100px", objectFit: "contain" }}
+              style={{ height: "90px", objectFit: "contain" }}
             />
           </Link>
 
@@ -175,40 +175,74 @@ if (!document.getElementById("floatBtnAnim")) {
           )}
           {/* MOBILE TOP-RIGHT  BUTTON */}
 {/* ⭐ FLOATING PROFILE LETTER BUTTON — GLASS DARK */}
-{isMobile && user && (
-  <Link
-    to={
-      user.role === "customer"
-        ? "/customer-profile"
-        : user.role === "owner"
-        ? "/owner-account"
-        : "/admin-dashboard"
-    }
-    style={{
-      position: "fixed",
-      top: "29px",
-      right: "12px",
-      zIndex: 3000,
-      width: "46px",
-      height: "46px",
-      borderRadius: "50%",
-      background: "rgba(0,0,0,0.35)",
-      border: "1px solid rgba(255,255,255,0.25)",
-      backdropFilter: "blur(8px)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#ffffff",
-      fontWeight: "700",
-      fontSize: "1.2rem",
-      textDecoration: "none",
-      boxShadow: "0 6px 15px rgba(0,0,0,0.45)",
-      animation: "floatBtn 3s ease-in-out infinite",
-    }}
-  >
-    {user?.name?.charAt(0)?.toUpperCase() || "U"}
-  </Link>
+
+{isMobile && (
+  user ? (
+    // Logged-in user → show profile shortcut
+    <Link
+      to={
+        user.role === "customer"
+          ? "/customer-profile"
+          : user.role === "owner"
+          ? "/owner-account"
+          : "/admin-dashboard"
+      }
+      style={{
+        position: "fixed",
+        top: "25px",
+        right: "12px",
+        zIndex: 3000,
+        width: "46px",
+        height: "46px",
+        borderRadius: "50%",
+        background: "rgba(0,0,0,0.35)",
+        border: "1px solid rgba(255,255,255,0.25)",
+        backdropFilter: "blur(8px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: "700",
+        fontSize: "1.2rem",
+        textDecoration: "none",
+        boxShadow: "0 6px 15px rgba(0,0,0,0.45)",
+        animation: "floatBtn 3s ease-in-out infinite",
+      }}
+    >
+      {user?.name?.charAt(0)?.toUpperCase() || "S"}
+    </Link>
+  ) : (
+    // No user → show default K
+    <Link
+      to="/login"
+      style={{
+        position: "fixed",
+        top: "25px",
+        right: "12px",
+        zIndex: 3000,
+        width: "46px",
+        height: "46px",
+        borderRadius: "50%",
+        background: "rgba(0,0,0,0.35)",
+        border: "1px solid rgba(255,255,255,0.25)",
+        backdropFilter: "blur(8px)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: "700",
+        fontSize: "1.2rem",
+        textDecoration: "none",
+        boxShadow: "0 6px 15px rgba(0,0,0,0.45)",
+        animation: "floatBtn 3s ease-in-out infinite",
+      }}
+    >
+      <User  />
+
+    </Link>
+  )
 )}
+
 
 
         </div>

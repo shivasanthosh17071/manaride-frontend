@@ -396,7 +396,7 @@ export default function OwnerDashboard() {
                 background: "var(--light-gray)",
                 color: "var(--primary-orange)",
                 border: "2px solid var(--primary-orange)",
-                padding: "0.5rem 1rem",
+                padding: "0.4rem 0.6rem",
                 borderRadius: "8px",
                 fontSize: "clamp(0.75rem, 2.8vw, 0.9rem)", // ⭐ Responsive font
                 fontWeight: "600",
@@ -422,7 +422,7 @@ export default function OwnerDashboard() {
         <div
           style={{
             position: "fixed",
-            bottom: "2rem",
+            bottom: "5rem",
             right: "2rem",
             background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
             color: "#fff",
@@ -437,7 +437,7 @@ export default function OwnerDashboard() {
       )}
 
       {/* CONTENT START */}
-      <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem" }}>
+      <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0.8rem" }}>
         {/* Stats */}
         <div
           style={{
@@ -473,7 +473,7 @@ export default function OwnerDashboard() {
             marginBottom: "2rem",
           }}
         >
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "700", color: "var(--dark)" }}>
+          <h2 style={{ fontSize: "1.2rem", fontWeight: "700", color: "var(--dark)" }}>
             Your Vehicles ({ownerVehicles.length})
           </h2>
           <button
@@ -482,20 +482,35 @@ export default function OwnerDashboard() {
               background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
               color: "var(--white)",
               border: "none",
-              padding: "0.8rem 1.5rem",
+              padding: "0.6rem 0.4rem",
               borderRadius: "8px",
-              fontSize: "0.95rem",
-              fontWeight: "700",
+              fontSize: "0.75rem",
+              // fontWeight: "700",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
-              gap: "0.5rem",
+              // gap: "0.5rem",
             }}
           >
-            <Plus size={18} /> Add Vehicle
+            <Plus size={18} />
+             Add Vehicle
           </button>
         </div>
-
+{/* ⭐ Approval Info Message */}
+{ownerVehicles.length > 0 &&<p
+  style={{
+    background: "#fff3cd",
+    color: "#856404",
+    padding: "0.8rem 1rem",
+    borderRadius: "8px",
+    marginBottom: "1.5rem",
+    fontSize: "0.85rem",
+    border: "1px solid #ffe7a3",
+  }}
+>
+  Please wait for approval for your vehicle from <strong>ManaRide</strong>. 
+  You will be notified once the verification is completed.
+</p>}
         {/* Vehicles table */}
         <div
           style={{
@@ -641,6 +656,84 @@ export default function OwnerDashboard() {
           </div>
         </div>
       </div>
+{/* Owner Demo / Guide Section */}
+<div
+  style={{
+    maxWidth: "1400px",
+    margin: "1.2rem auto 2rem",
+    background: "#fff",
+    padding: "1.5rem",
+    borderRadius: "12px",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+  }}
+>
+  <h2
+    style={{
+      fontSize: "1.3rem",
+      fontWeight: "800",
+      marginBottom: "1rem",
+      color: "var(--primary-orange)",
+    }}
+  >
+    How ManaRide Owner Dashboard Works 🚘
+  </h2>
+
+  <ul style={{ margin: 0, paddingLeft: "1.2rem", lineHeight: "1.7" }}>
+
+    <li>
+      <strong>Add your vehicle</strong> with all required documents (image, RC, insurance).
+    </li>
+
+    <li>
+      Your vehicle will be <strong>sent for approval</strong> to the ManaRide team.
+    </li>
+
+    <li>
+      Approval status will show as:
+      <br />– <span style={{ color: "#2d7d2d", fontWeight: 600 }}>Approved</span>: Vehicle is live and customers can book it.
+      <br />– <span style={{ color: "#d4a500", fontWeight: 600 }}>Pending</span>: Please wait for verification.
+      <br />– <span style={{ color: "#c86464", fontWeight: 600 }}>Rejected</span>: Check the reason and correct documents.
+    </li>
+
+    <li>Once approved, your vehicle will appear on the platform for customers.</li>
+
+    <li>You will receive <strong>booking notifications</strong> from customers.</li>
+
+    <li>
+      After accepting a booking,
+      <strong style={{ color: "#c86464" }}> don’t forget to change the vehicle status to “Unavailable”</strong>
+      to avoid double bookings.
+    </li>
+
+    <li>
+      When handing over your vehicle, always
+      <strong style={{ color: "var(--primary-orange)" }}> collect the customer's original driving licence</strong>
+      and
+      <strong style={{ color: "var(--primary-orange)" }}> record a full video of the vehicle condition</strong>
+      (scratches, dents, damages).
+    </li>
+
+    {/* ⭐ NEW RED WARNING LINE */}
+    <li
+      style={{
+        color: "#cc0000",
+        fontWeight: "700",
+        marginTop: "0.5rem",
+      }}
+    >
+      Take direct payment from the customer, only the mentioned price for your vehicle.
+      <br />
+      Any complaints regarding extra charges or misconduct will lead to <u>your vehicle being blocked</u>.
+    </li>
+
+    <li>
+      After a booking is confirmed, <strong>customers will receive your contact number</strong>.
+    </li>
+
+    <li>You can Update / Disable / Delete your vehicle anytime.</li>
+  </ul>
+</div>
+
 
       {/* MODALS BELOW */}
       {/* --- Add/Edit Modal --- */}

@@ -60,6 +60,8 @@ export default function VehicleDetails() {
     window.addEventListener("resize", check)
     return () => window.removeEventListener("resize", check)
   }, [])
+const userDataFromLocalStorage = localStorage.getItem("userInfo")
+ const userInfo = JSON.parse(userDataFromLocalStorage)
 
   // Prefill user info
   useEffect(() => {
@@ -352,10 +354,10 @@ export default function VehicleDetails() {
           )}
 
           {/* Booking Buttons */}
-          {!isOwnerViewingOwnVehicle && vehicle.status === "Available" && (
+          {userInfo?.role !== "owner" && vehicle.status === "Available" && (
             <div className="book-buttons" style={{ display: "flex", gap: 12 }}>
               <button
-                onClick={handleWhatsAppBooking}
+                // onClick={handleWhatsAppBooking}
                 style={{
                   background: "transparent",
                   color: "#333",
@@ -368,6 +370,7 @@ export default function VehicleDetails() {
                   alignItems: "center",
                   gap: "8px",
                 }}
+                disabled
               >
                 <MessageCircle size={18} /> Book via WhatsApp
               </button>
@@ -377,7 +380,7 @@ export default function VehicleDetails() {
               </button>
             </div>
           )}
-          {!isOwnerViewingOwnVehicle && vehicle.status !== "Available" && (
+          { vehicle.status !== "Available" && (
             <div className="vehicle-unavailable-msg">
               <p style={{ color: "#c33", fontWeight: "600" }}>
                 This vehicle is currently booked.

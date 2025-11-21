@@ -160,7 +160,8 @@ export default function MyBookings() {
       )}
 
       {/* Bookings Section */}
-   <section className="container my-5">
+  <section className="container my-5">
+
   {bookings.length === 0 ? (
     <div className="text-center bg-white p-5 rounded shadow">
       <h3 className="text-muted mb-3">You have no bookings yet.</h3>
@@ -179,44 +180,56 @@ export default function MyBookings() {
       </button>
     </div>
   ) : (
-    <div className="row g-4">
+    <div className="d-flex flex-column gap-4">
+
       {bookings.map((b, idx) => (
-        <div key={b._id} className="col-12 col-md-6 col-lg-4">
+        <div
+          key={b._id}
+          className="d-flex flex-wrap align-items-center bg-white shadow-sm"
+          style={{
+            borderRadius: "14px",
+            padding: "16px",
+            gap: "18px",
+            animation: `slideUp 0.6s ease-out ${idx * 0.1}s both`,
+          }}
+        >
+
+          {/* IMAGE */}
           <div
-            className="card border-0 shadow-sm h-100"
             style={{
-              borderRadius: "14px",
-              transition: "0.3s",
-              animation: `slideUp 0.6s ease-out ${idx * 0.1}s both`,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-6px)"
-              e.currentTarget.style.boxShadow =
-                "0 14px 35px rgba(255,111,0,0.25)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.1)"
+              width: "120px",
+              height: "90px",
+              overflow: "hidden",
+              borderRadius: "10px",
+              flexShrink: 0,
             }}
           >
-            {/* Image */}
-            <div className="position-relative">
-              <img
-                src={b.vehicleId?.image}
-                alt="Vehicle"
-                className="card-img-top"
-                style={{
-                  height: "220px",
-                  width: "100%",
-                  objectFit: "cover",
-                }}
-              />
+            <img
+              src={b.vehicleId?.image}
+              alt="vehicle"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            />
+          </div>
 
-              {/* Status Badge */}
+          {/* CENTER INFO SECTION */}
+          <div
+            className="flex-grow-1"
+            style={{ minWidth: "200px" }}
+          >
+            <div className="d-flex justify-content-between align-items-center">
+              <h5 className="fw-bold mb-1" style={{ fontSize: "1rem" }}>
+                {b.vehicleId?.name}
+              </h5>
+
+              {/* STATUS BADGE */}
               <span
-                className="position-absolute top-0 end-0 m-2 px-3 py-1 fw-bold"
+                className="px-3 py-1 fw-bold text-capitalize"
                 style={{
-                  fontSize: "0.85rem",
+                  fontSize: "0.75rem",
                   borderRadius: "20px",
                   background:
                     b.status === "confirmed"
@@ -240,89 +253,90 @@ export default function MyBookings() {
               </span>
             </div>
 
-            {/* Details */}
-            <div className="card-body">
-              <h5 className="fw-bold mb-1">{b.vehicleId?.name}</h5>
-
-              <p className="text-muted small d-flex align-items-center mb-3">
-                <Car size={16} className="me-2" />
-                {b.vehicleId?.type} • ₹{b.vehicleId?.pricePerDay}/day
-              </p>
-
-              <div className="row text-muted small mb-3">
-                <div className="col-6 mb-2">
-                  <Calendar size={16} className="me-1" />
-                  {b.date}
-                </div>
-
-                <div className="col-6 mb-2">
-                  <Clock size={16} className="me-1" />
-                  {b.timeSlot}
-                </div>
-
-                <div className="col-6 mb-2">
-                  <MapPin size={16} className="me-1" />
-                  {b.vehicleId?.location}
-                </div>
-
-                <div className="col-6 mb-2">Days: {b.days}</div>
-              </div>
-
-              {b.notes && (
-                <p className="p-2 rounded small" style={{ background: "var(--light-gray)" }}>
-                  Note: {b.notes}
-                </p>
-              )}
-
-              {/* Buttons */}
-              {b.status === "pending" && (
-                <button
-                  onClick={() => handleCancel(b._id)}
-                  className="btn w-100 fw-bold mt-3"
-                  style={{
-                    background: "#fff3f3",
-                    border: "1px solid #c86464",
-                    color: "#c86464",
-                    borderRadius: "8px",
-                    padding: "0.8rem",
-                    transition: "0.3s",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = "#c86464"
-                    e.currentTarget.style.color = "white"
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#fff3f3"
-                    e.currentTarget.style.color = "#c86464"
-                  }}
-                >
-                  <XCircle size={16} className="me-2" />
-                  Cancel Booking
-                </button>
-              )}
-
-              {b.status === "confirmed" && (
-                <button
-                  className="btn w-100 fw-bold mt-3"
-                  style={{
-                    background: "#e6fbe6",
-                    border: "1px solid #2d7d2d",
-                    color: "#2d7d2d",
-                    borderRadius: "8px",
-                    padding: "0.8rem",
-                  }}
-                >
-                  <CheckCircle size={16} className="me-2" />
-                  Confirmed
-                </button>
-              )}
+            <div className="text-muted small mb-2">
+              <Car size={14} className="me-2" />
+              {b.vehicleId?.type} • ₹{b.vehicleId?.pricePerDay}/day
             </div>
+
+            {/* INFO GRID */}
+            <div className="row small text-muted g-1">
+              <div className="col-6 d-flex align-items-center">
+                <Calendar size={14} className="me-1" /> {b.date}
+              </div>
+              <div className="col-6 d-flex align-items-center">
+                <Clock size={14} className="me-1" /> {b.timeSlot}
+              </div>
+              <div className="col-6 d-flex align-items-center">
+                <MapPin size={14} className="me-1" /> {b.vehicleId?.location}
+              </div>
+              <div className="col-6">Days: {b.days}</div>
+            </div>
+
+            {b.notes && (
+              <p
+                className="small mt-2 p-2 rounded"
+                style={{ background: "var(--light-gray)", fontSize: "0.8rem" }}
+              >
+                Note: {b.notes}
+              </p>
+            )}
+          </div>
+
+          {/* BUTTON AREA – RIGHT SIDE */}
+          <div
+            className="ms-auto text-end"
+            style={{ minWidth: "140px" }}
+          >
+            {b.status === "pending" && (
+              <button
+                onClick={() => handleCancel(b._id)}
+                className="btn fw-bold w-100"
+                style={{
+                  background: "#fff3f3",
+                  border: "1px solid #c86464",
+                  color: "#c86464",
+                  borderRadius: "8px",
+                  padding: "0.6rem",
+                  fontSize: "0.85rem",
+                }}
+              >
+                <XCircle size={14} className="me-2" />
+                Cancel
+              </button>
+            )}
+
+            {b.status === "confirmed" && (
+  <div className="text-end" style={{ width: "100%" }}>
+    <span
+      className="btn fw-bold w-100 mb-2"
+      style={{
+        background: "#e6fbe6",
+        border: "1px solid #2d7d2d",
+        color: "#2d7d2d",
+        borderRadius: "8px",
+        padding: "0.6rem",
+        fontSize: "0.85rem",
+        cursor: "default",
+      }}
+    >
+      <CheckCircle size={14} className="me-2" />
+      Confirmed
+    </span>
+
+    <p style={{ fontSize: "0.75rem", color: "#555", margin: 0 }}>
+      ✔ Check your email for the owner's contact number<br />
+      ✔ Or wait for a call from the owner
+    </p>
+  </div>
+)}
+
           </div>
         </div>
       ))}
     </div>
   )}
 </section>
+
 
 
       {/* CTA Footer */}

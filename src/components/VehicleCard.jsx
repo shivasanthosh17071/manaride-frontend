@@ -5,7 +5,7 @@ import { MapPin, Fuel, Users } from "lucide-react"
 import "./VehicleCard.css"
 
 export default function VehicleCard({ vehicle }) {
-  console.log(vehicle)
+  // console.log(vehicle)
   const navigate = useNavigate()
 
   const handleClick = () => {
