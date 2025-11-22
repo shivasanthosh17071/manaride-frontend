@@ -9,7 +9,7 @@ import { API_URL } from "../config/api"
 import "./Home.css"
 import BookingFlow from "../components/FAQ"
 import IntroVideo from "../components/IntroVideo"
-
+import { Zap, ShieldCheck, Wallet, MapPin } from "lucide-react";
 export default function Home() {
   const navigate = useNavigate()
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -52,27 +52,27 @@ export default function Home() {
     loadLocations()
   }, [])
 
- const features = [
+const features = [
   {
-    icon: "⚡",
+    icon: <Zap size={26} color="var(--primary-orange)" />,
     title: "Instant Booking",
     description:
       "Book your vehicle instantly with real-time updates and a smooth booking experience.",
   },
   {
-    icon: "✓",
+    icon: <ShieldCheck size={26} color="var(--primary-orange)" />,
     title: "Verified Vehicle Owners",
     description:
       "All vehicles and owners are verified to ensure trust, safety, and a reliable rental experience.",
   },
   {
-    icon: "💰",
+    icon: <Wallet size={26} color="var(--primary-orange)" />,
     title: "Flexible Pricing",
     description:
       "Transparent pricing with no hidden charges. Choose the ride that fits your budget.",
   },
   {
-    icon: "📍",
+    icon: <MapPin size={26} color="var(--primary-orange)" />,
     title: "Real-Time Availability",
     description:
       "Check nearby vehicles available right now and pick the one that suits your plan.",
