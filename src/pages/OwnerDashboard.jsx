@@ -21,6 +21,7 @@ export default function OwnerDashboard() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null)
   const [toastMessage, setToastMessage] = useState("")
   const [editingVehicle, setEditingVehicle] = useState(null)
+const [showTermsModal, setShowTermsModal] = useState(false)
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"))
   const token = userInfo?.token
@@ -476,25 +477,23 @@ export default function OwnerDashboard() {
           <h2 style={{ fontSize: "1.2rem", fontWeight: "700", color: "var(--dark)" }}>
             Your Vehicles ({ownerVehicles.length})
           </h2>
-          <button
-            onClick={handleAddVehicle}
-            style={{
-              background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
-              color: "var(--white)",
-              border: "none",
-              padding: "0.6rem 0.4rem",
-              borderRadius: "8px",
-              fontSize: "0.75rem",
-              // fontWeight: "700",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              // gap: "0.5rem",
-            }}
-          >
-            <Plus size={18} />
-             Add Vehicle
-          </button>
+         <button
+  onClick={() => setShowTermsModal(true)}
+  style={{
+    background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
+    color: "var(--white)",
+    border: "none",
+    padding: "0.6rem 0.4rem",
+    borderRadius: "8px",
+    fontSize: "0.75rem",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+  }}
+>
+  <Plus size={18} /> Add Vehicle
+</button>
+
         </div>
 {/* ⭐ Approval Info Message */}
 {ownerVehicles.length > 0 &&<p
@@ -714,17 +713,53 @@ export default function OwnerDashboard() {
     </li>
 
     {/* ⭐ NEW RED WARNING LINE */}
-    <li
-      style={{
-        color: "#cc0000",
-        fontWeight: "700",
-        marginTop: "0.5rem",
-      }}
-    >
-      Take direct payment from the customer, only the mentioned price for your vehicle.
-      <br />
-      Any complaints regarding extra charges or misconduct will lead to <u>your vehicle being blocked</u>.
+   {/* ⭐ IMPORTANT OWNER RULES (Strong Warning Box) */}
+<div
+  style={{
+    background: "#ffe5e5",
+    border: "1px solid #ffb3b3",
+    padding: "1rem",
+    borderRadius: "10px",
+    marginTop: "1rem",
+  }}
+>
+  <strong style={{ color: "#cc0000", fontSize: "0.95rem" }}>
+    ⚠️ IMPORTANT RULES FOR VEHICLE OWNERS
+  </strong>
+
+  <ul
+    style={{
+      marginTop: "0.6rem",
+      paddingLeft: "1.4rem",
+      color: "#990000",
+      lineHeight: "1.6",
+      fontSize: "0.9rem",
+      fontWeight: 500,
+    }}
+  >
+    <li>
+      Accept <strong>ONLY the rental amount shown in ManaRide app</strong> — no extra charges.
     </li>
+
+    <li>
+      Strictly <strong>NO asking for advance payments</strong> or hidden fees.
+    </li>
+
+    <li>
+      Do not force customers for fuel, penalties, tips, or any other additional money.
+    </li>
+
+    <li>
+      Any complaint from customers regarding <strong>extra charges, misbehaviour,
+      or unsafe behaviour may result in permanent account suspension.</strong>
+    </li>
+
+    <li>
+      Treat customers professionally. ManaRide reviews all complaints seriously.
+    </li>
+  </ul>
+</div>
+
 
     <li>
       After a booking is confirmed, <strong>customers will receive your contact number</strong>.
@@ -733,6 +768,128 @@ export default function OwnerDashboard() {
     <li>You can Update / Disable / Delete your vehicle anytime.</li>
   </ul>
 </div>
+{/* ⭐ TERMS & CONDITIONS MODAL */}
+{showTermsModal && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100vw",
+      height: "100vh",
+      background: "rgba(0,0,0,0.55)",
+      backdropFilter: "blur(4px)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 3000,
+      padding: "1rem",
+     
+    }}
+  >
+    <div
+      style={{
+        background: "#fff",
+        width: "95%",
+        maxWidth: "480px",
+        borderRadius: "14px",
+        padding: "1.8rem",
+        boxShadow: "0 10px 40px rgba(0,0,0,0.25)",
+        animation: "slideUp 0.3s ease-out",
+        maxHeight: "90vh",
+    overflowY: "auto",
+      }}
+    >
+      <h2
+        style={{
+          fontWeight: "800",
+          fontSize: "1.3rem",
+          marginBottom: "1rem",
+          color: "var(--primary-orange)",
+          textAlign: "center",
+        }}
+      >
+        Before You Add a Vehicle
+      </h2>
+
+      <p style={{ fontSize: "0.9rem", color: "#555", lineHeight: 1.6 }}>
+        Please agree to the following rules to list your vehicle on <strong>ManaRide</strong>:
+      </p>
+
+      <ul
+        style={{
+          marginTop: "0.7rem",
+          paddingLeft: "1.2rem",
+          fontSize: "0.9rem",
+          color: "#444",
+          lineHeight: 1.6,
+        }}
+      >
+        <li>All documents uploaded (RC, insurance, etc.) must be genuine.</li>
+        <li>You will collect only the rental amount shown in the app—no extra charges.</li>
+        <li>You must hand over the vehicle clean and in good condition.</li>
+        <li>You must verify the customer’s original driving license during pickup.</li>
+        <li>You must record a video of the vehicle before giving it to the customer.</li>
+        <li>Any fraud, misconduct, or overcharging may lead to permanent ban.</li>
+    <li>
+  All uploaded vehicle images must be <strong>clear and not blurry</strong>.
+</li>
+
+<li>
+  Only the following image formats are allowed:
+  <strong> JPG, JPEG, and PNG</strong>.
+</li>
+
+<li>
+  Do not upload PDF files or other document formats in the vehicle image section.
+</li>
+  </ul>
+
+      {/* Buttons */}
+      <div
+        style={{
+          display: "flex",
+          gap: "1rem",
+          marginTop: "1.8rem",
+        }}
+      >
+        <button
+          onClick={() => {
+            setShowTermsModal(false)
+            handleAddVehicle()         // ⭐ Open the add form only after agree
+          }}
+          style={{
+            flex: 1,
+            background: `linear-gradient(135deg, var(--primary-orange), var(--accent-amber))`,
+            color: "#fff",
+            border: "none",
+            padding: "0.9rem",
+            borderRadius: "10px",
+            fontWeight: "700",
+            cursor: "pointer",
+          }}
+        >
+          I Agree & Continue
+        </button>
+
+        <button
+          onClick={() => setShowTermsModal(false)}
+          style={{
+            flex: 1,
+            background: "#f2f2f2",
+            padding: "0.9rem",
+            borderRadius: "10px",
+            fontWeight: "700",
+            cursor: "pointer",
+            border: "none",
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
 
       {/* MODALS BELOW */}

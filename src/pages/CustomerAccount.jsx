@@ -151,6 +151,68 @@ export default function CustomerAccount() {
           <Heart size={18} /> Saved Vehicles
         </button>
       </div>
+      {/* ⭐ Customer Guidance Accordion */}
+<div
+  style={{
+    maxWidth: "600px",
+    margin: "1rem auto 2rem",
+  }}
+>
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "12px",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+      overflow: "hidden",
+    }}
+  >
+   
+
+    {/* Content */}
+    
+      <div
+        style={{
+          padding: "1rem 1.2rem",
+          background: "#fff",
+          lineHeight: 1.7,
+          color: "#444",
+          fontSize: "0.95rem",
+        }}
+      >
+        <ul style={{ paddingLeft: "1.2rem", margin: 0 }}>
+          <li>
+            Keep your <strong>mobile number updated</strong> so vehicle owners
+            can contact you after booking confirmation.
+          </li>
+
+          <li>
+            Always carry your <strong>original driving licence</strong> during
+            vehicle pickup.
+          </li>
+
+          <li>
+            You can review all your bookings anytime under{" "}
+            <strong>My Bookings</strong>.
+          </li>
+
+          <li>
+            Save your favorite vehicles for quick access under{" "}
+            <strong>Saved Vehicles</strong>.
+          </li>
+
+          <li>
+            If you face any issue, contact ManaRide support from the website.
+          </li>
+
+          <li>
+            Profile details saved here apply across the app automatically.
+          </li>
+        </ul>
+      </div>
+    
+  </div>
+</div>
+
     </div>
   );
 }

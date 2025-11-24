@@ -156,15 +156,4 @@ const buttonStylePrimary = {
   cursor: "pointer",
 }
 
-const buttonStyleDanger = {
-  background: "#ffdddd",
-  color: "#c33",
-  padding: "1rem",
-  borderRadius: "10px",
-  border: "2px solid #c33",
-  fontWeight: "700",
-  cursor: "pointer",
-  display: "flex",
-  justifyContent: "center",
-  gap: "0.5rem",
-}
+

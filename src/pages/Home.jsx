@@ -340,7 +340,7 @@ Rent bikes and cars from verified owners with live availability and instant book
                 onBlur={(e) => (e.target.style.borderColor = "#eee")}
               >
                 <option>All Types</option>
-                <option>Cars</option>
+                {/* <option>Cars</option> */}
                 <option>Bikes</option>
               </select>
             </div>
@@ -414,22 +414,23 @@ Rent bikes and cars from verified owners with live availability and instant book
               >
                 Start Date
               </label>
-              <input
-                type="date"
-                style={{
-                  width: "100%",
-                  padding: "0.8rem",
-                  border: "2px solid #eee",
-                  borderRadius: "8px",
-                  fontSize: "1rem",
-                  cursor: "pointer",
-                  transition: "border-color 0.3s",
-                }}
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
-                onBlur={(e) => (e.target.style.borderColor = "#eee")}
-              />
+         <input
+  type="date"
+  style={{
+    width: "100%",
+    padding: "0.8rem",
+    border: "2px solid #eee",
+    borderRadius: "8px",
+    fontSize: "1rem",
+    cursor: "pointer",
+    transition: "border-color 0.3s",
+  }}
+  value={startDate}
+  onChange={(e) => setStartDate(e.target.value)}
+  min={new Date().toISOString().split("T")[0]}  // ⬅ Prevent past dates
+  onFocus={(e) => (e.target.style.borderColor = "var(--primary-orange)")}
+/>
+
             </div>
 
             <button

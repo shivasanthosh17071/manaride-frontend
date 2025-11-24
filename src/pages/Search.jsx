@@ -122,7 +122,7 @@ export default function Search() {
           }}
         >
           <option>All</option>
-          <option>Car</option>
+          {/* <option>Car</option> */}
           <option>Bike</option>
         </select>
       </div>
@@ -316,14 +316,14 @@ export default function Search() {
               <span
                 style={{
                   fontSize: "12px",
-                  background: "var(--white)",
+                  // background: "var(--white)",
                   padding: "0rem 0.6rem",
                   borderRadius: "20px",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  // boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
                   color: "#666",
                 }}
               >
-                {loading ? "Loading..." : `${vehicles.length}-vehicles`}
+                {loading ? "Loading..." : `${vehicles.length}vehicles`}
               </span>
 
               {/* Mobile filter button */}

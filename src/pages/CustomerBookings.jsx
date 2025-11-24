@@ -10,6 +10,7 @@ export default function MyBookings() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState("")
+const [showGuide, setShowGuide] = useState(false)
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo"))
   const token = userInfo?.token
@@ -142,6 +143,114 @@ export default function MyBookings() {
           Manage your active and past bookings with ease.
         </p>
       </section>
+{/* ⭐ Booking Guidance Accordion */}
+<div
+  style={{
+    maxWidth: "1200px",
+    margin: "2rem auto 0",
+    padding: "0 1rem",
+  }}
+>
+  <div
+    style={{
+      background: "#fff",
+      borderRadius: "12px",
+      boxShadow: "0 4px 15px rgba(0,0,0,0.06)",
+      overflow: "hidden",
+    }}
+  >
+    {/* Accordion Header */}
+    <div
+      onClick={() => setShowGuide(!showGuide)}
+      style={{
+        padding: "1rem 1.2rem",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        cursor: "pointer",
+        background: "var(--light-gray)",
+      }}
+    >
+      <h3
+        style={{
+          margin: 0,
+          fontSize: "1.1rem",
+          fontWeight: 700,
+          // color: "var(--primary-orange)",
+        }}
+      >
+        Booking Guidance & Tips
+      </h3>
+
+      <span
+        style={{
+          fontSize: "1.4rem",
+          fontWeight: "700",
+          transition: "0.3s",
+          transform: showGuide ? "rotate(180deg)" : "rotate(0deg)",
+          color: "var(--primary-orange)",
+        }}
+      >
+        ▼
+      </span>
+    </div>
+
+    {/* Accordion Content */}
+    {showGuide && (
+      <div
+        style={{
+          padding: "1.2rem 1.4rem",
+          borderTop: "1px solid #eee",
+          background: "#fff",
+        }}
+      >
+        <ul
+          style={{
+            margin: 0,
+            paddingLeft: "1.2rem",
+            lineHeight: 1.7,
+            color: "#555",
+            fontSize: "0.95rem",
+          }}
+        >
+          <li>
+            After your booking is <strong>accepted</strong>, you will receive
+            the owner’s phone number and pickup instructions.
+          </li>
+
+          <li>
+            Always carry your <strong>original driving licence</strong> during
+            pickup. Owners may refuse without it.
+          </li>
+
+          <li>
+            Before taking the vehicle, <strong>record a video</strong> of the
+            condition: scratches, dents, tyre condition, fuel, etc.
+          </li>
+
+          <li>
+            The rental price shown in the app is <strong>final</strong>. Do not
+            pay extra charges. Report if someone demands more.
+          </li>
+
+          <li>
+            You can cancel your booking anytime before it is accepted.
+          </li>
+
+          <li>
+            If already confirmed, please contact the owner if you cannot arrive
+            on time.
+          </li>
+
+          <li>
+            For any support or issues, reach out to{" "}
+            <strong>ManaRide Customer Help</strong>.
+          </li>
+        </ul>
+      </div>
+    )}
+  </div>
+</div>
 
       {/* Message */}
       {message && (

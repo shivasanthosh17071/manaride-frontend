@@ -142,6 +142,27 @@ export default function OwnerBookings() {
           Manage all booking requests for your listed vehicles.
         </p>
       </section>
+<div
+  style={{
+    maxWidth: "900px",
+    margin: "1.5rem auto 0",
+    background: "rgba(255, 255, 255, 1)",
+    padding: "1rem 1.4rem",
+    borderRadius: "10px",
+    backdropFilter: "blur(6px)",
+    color: "black",
+    fontSize: "0.9rem",
+  }}
+>
+  <strong>Guidelines for Owners:</strong>
+  <ul style={{ marginTop: "6px", paddingLeft: "1.2rem" }}>
+    <li>Review every booking request carefully.</li>
+    <li>If you accept, immediately check your email for customer details.</li>
+    <li>Contact the customer directly and decide the pickup location & time.</li>
+    <li>If unavailable or invalid, reject with a clear reason.</li>
+    <li>Respond quickly — delayed actions may lead to booking cancellation.</li>
+  </ul>
+</div>
 
       {/* Message */}
       {message && (
@@ -262,8 +283,12 @@ export default function OwnerBookings() {
                       >
                         Reject
                       </button>
+                      
                     </div>
                   )}
+<p style={{ fontSize: "0.75rem", color: "#888", marginTop: "4px" }}>
+  Accept only if your vehicle is available for the selected date & time.
+</p>
 
                   {/* Rejected Reason */}
                   {b.rejectedReason && (
@@ -286,6 +311,36 @@ export default function OwnerBookings() {
           </div>
         )}
       </section>
+<div
+className="mx-0 mx-md-4"
+  style={{
+    background: "white",
+    padding: "1rem 1.2rem",
+    borderRadius: "12px",
+    marginBottom: "2rem",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.08)",
+  }}
+>
+  <details>
+    <summary style={{ cursor: "pointer", fontWeight: "600" }}>
+      How the booking process works for owners
+    </summary>
+
+    <div style={{ marginTop: "0.8rem", color: "#666", fontSize: "0.9rem" }}>
+      <p><strong>1. Customer sends a booking request</strong><br />
+      The customer selects your vehicle, date, and timeslot.</p>
+
+      <p><strong>2. You decide to Accept or Reject</strong><br />
+      If accepted, they receive confirmation. If rejected, provide a reason.</p>
+
+      <p><strong>3. After Accepting</strong><br />
+      You must contact them and finalize pickup & return instructions.</p>
+
+      <p><strong>4. On Pickup Day</strong><br />
+      Verify the customer's ID, license, and collect required documents.</p>
+    </div>
+  </details>
+</div>
 
       {/* ⭐ ACCEPTED MODAL */}
       {showAcceptedModal && (
@@ -316,20 +371,27 @@ export default function OwnerBookings() {
               animation: "slideUp 0.3s ease-out",
             }}
           >
-            <h3 style={{ fontWeight: "700", marginBottom: "1rem", color: "#333" }}>
-              Booking Accepted 🎉
+            <h3 style={{ fontWeight: "700", marginBottom: "1rem", color: "#15a100ff" }}>
+              Booking Accepted 
             </h3>
+<p
+  style={{
+    fontSize: "0.95rem",
+    color: "#555",
+    marginBottom: "1.5rem",
+    lineHeight: "1.5",
+    textAlign:"left"
+  }}
+>
+  The booking is now <strong>confirmed</strong>.  
+  Please follow the next steps:
+  <br /><br />
+  1️ Check your email for complete customer details.<br />
+  2️ Contact the customer to plan <strong>pickup and drop timings</strong>.<br />
+  3️ Verify customer ID before handing over the vehicle.<br />
+  4️ Ensure the vehicle is clean and ready for use.
+</p>
 
-            <p
-              style={{
-                fontSize: "0.95rem",
-                color: "#555",
-                marginBottom: "1.5rem",
-              }}
-            >
-              Please <strong>check your email</strong> and{" "}
-              <strong>contact the customer</strong> to arrange the pickup.
-            </p>
 
             <button
               onClick={() => setShowAcceptedModal(false)}
